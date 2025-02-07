@@ -20,4 +20,4 @@ Our system is robust and automated which allows for easy finetuning of the model
 ```
 
 ## Datasets
-In order to generate the required datasets that will be used for training and evaluation you will need access to the csv files which can be found here [ [link](https://github.com/panaschristou/grid-datasets) ] and should then be added to a folder csv_files inside Dataset-Notebooks (if the folder does not exist, create it and add the csv files from the link inside).  
+In order to generate the required datasets that will be used for training and evaluation you will need access to the csv files which can be found here [ [link](https://github.com/panaschristou/grid-datasets) ] and should then be added to the folder csv_files inside Dataset-Notebooks (if the folder does not exist, create it and add the csv files from the link inside).  
