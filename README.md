@@ -3,7 +3,7 @@ LLM4DistReconfig: A Fine-tuned Large Language Model for Power Distribution Netwo
 Accepted in NACL 2025 Conference Main Track
 
 ## Requirements
-'''
+```
 -accelerate
 -bitsandbytes
-'''
+```
