@@ -1,6 +1,6 @@
 # LLM4DistReconfig
 LLM4DistReconfig: A Fine-tuned Large Language Model for Power Distribution Network Reconfiguration [ [link](https://arxiv.org/abs/2501.14960) ]  
-Accepted in NACL 2025 Conference Main Track  
+Accepted in NAACL 2025 Conference Main Track  
 
 This is the source code to regenerate the results of our paper LLM4DistReconfig.  
 LLM4DistReconfig is a finetuned Llama 3.1 model that is able to solve the grid reconfiguration task for power systems. 
@@ -21,3 +21,11 @@ Our system is robust and automated which allows for easy finetuning of the model
 
 ## Datasets
 In order to generate the required datasets that will be used for training and evaluation you will need access to the csv files which can be found here [ [link](https://github.com/panaschristou/grid-datasets) ] and should then be added to the folder csv_files inside Dataset-Notebooks (if the folder does not exist, create it and add the csv files from the link inside).  
+
+Inside the Dataset-Notebooks folder you will find the dataset-generation-script notebook which you would run to generate all the required files to train your model.
+
+## Finetuning
+In the folder Model-Notebooks we provide the templates to fine-tune  a model on our dataset (required you have completed generating the datasets).
+
+## Evaluation
+In the folder Model-Notebooks we also provide the templates to evaluate your model.
