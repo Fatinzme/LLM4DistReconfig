@@ -4,6 +4,10 @@ Accepted in NACL 2025 Conference Main Track
 
 ## Requirements
 ```
--accelerate
--bitsandbytes
+- torch
+- accelerate
+- bitsandbytes
+- peft
+- transformers
+- trl
 ```
