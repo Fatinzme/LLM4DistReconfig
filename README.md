@@ -3,7 +3,7 @@ LLM4DistReconfig: A Fine-tuned Large Language Model for Power Distribution Netwo
 Accepted in NAACL 2025 Conference Main Track  
 
 This is the source code to regenerate the results of our paper LLM4DistReconfig.  
-All of the Research & Development was conducted on NYU HPC. We sincerely thank NYU HPC for helping us resolve any issues and supporting the completion of this project through GPU allocation when we needed it.  
+All of the Research & Development was conducted on [NYU HPC](https://sites.google.com/nyu.edu/nyu-hpc/). We sincerely thank NYU HPC for helping us resolve any issues and supporting the completion of this project through GPU allocation when we needed it.  
 
 LLM4DistReconfig is a finetuned Llama 3.1 model that is able to solve the grid reconfiguration task for power systems. 
 It has been tested on sizes of various sizes individually and combined and has been evaluated on unseen datasets of sizes both in and out of distribution i.e. (between the sizes it was trained on and outside).
