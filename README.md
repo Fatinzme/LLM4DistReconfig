@@ -26,7 +26,7 @@ In order to generate the required datasets that will be used for training and ev
 
 Inside the Dataset-Notebooks folder you will find the dataset-generation-script notebook which you would run to generate all the required files to train your model. Going through the notebook we show how to process each individual file by creating the prompt, the input and the ouput to the model, splitting the file into training, validation and testing as well any auxiliary files that may be needed. Upon creating the files for each csv file we also provide functions for combining them together into a single file that can be used to train the model on a dataset with varying network sizes.
 
-In the same folder we provided a file that converts MATLAB files to the required format to be used with the dataset-generation-script for easy conversion since most power systems engineers use MATLAB and we want them to have a smoother experience using our system.
+In the same folder we provided a file that converts MATLAB data files (.mat) to the required format to be used with the dataset-generation-script (python script) for easy conversion since our datasets were generated using Matpower software in MATLAB. This script can be used to have a smoother experience in using our codes.
 
 ## Finetuning
 In the folder Model-Notebooks we provide the templates to fine-tune  a model on our dataset (required you have completed generating the datasets). You will need to modify the sh file with the right path to the dataset that you will use and also for the model. The model could be a model for hugging face for initial fine tuning or your own model that you want to fine tune even more. You will need to specify where to save the fine tuned model as well as other hyper parameters.
