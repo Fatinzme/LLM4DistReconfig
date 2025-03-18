@@ -1,39 +1,101 @@
 # LLM4DistReconfig
-LLM4DistReconfig: A Fine-tuned Large Language Model for Power Distribution Network Reconfiguration [ [link](https://arxiv.org/abs/2501.14960) ]  
-Accepted in NAACL 2025 Conference Main Track  
 
-This is the source code to regenerate the results of our paper LLM4DistReconfig.  
-All of the Research & Development was conducted on [NYU HPC](https://sites.google.com/nyu.edu/nyu-hpc/). We sincerely thank NYU HPC for helping us resolve any issues and supporting the completion of this project through GPU allocation when we needed it.  
+## A Fine-tuned Large Language Model for Power Distribution Network Reconfiguration
 
-LLM4DistReconfig is a finetuned Llama 3.1 model that is able to solve the grid reconfiguration task for power systems. 
-It has been tested on networks of various sizes individually and combined and has been evaluated on unseen network datasets of sizes both in and out of distribution i.e. (between the sizes it was trained on and outside).
+🚀 **Accepted at NAACL 2025 Main Track**  
+🔗 **Paper:** [LLM4DistReconfig](https://arxiv.org/abs/2501.14960)  
+📡 **Developed with the help of:** [NYU HPC](https://sites.google.com/nyu.edu/nyu-hpc/)  
 
-We have prepared tempalates of the python notebooks and the .sh files we used to generate the files for training and evaluation as well as training and evaluating the model.
-Our system is robust and automated which allows for easy finetuning of the model and its evaluation but also for easy modification of the code to adapt to your needs.
+---
 
-## Requirements
+## 🔥 Introduction
+**LLM4DistReconfig** is a fine-tuned **Llama 3.1** model designed to solve **grid reconfiguration** tasks for power distribution systems. Our model has been rigorously tested on various network sizes, both individually and combined, and has been evaluated on **unseen network datasets**, including sizes that were both **within** and **outside** of the training distribution.
+
+We provide a **robust and automated** framework that enables **seamless fine-tuning and evaluation** of the model while allowing for easy modifications to adapt to different requirements. This repository contains:
+
+- **Pre-configured Python notebooks** for dataset generation, model training, and evaluation.
+- **Automated scripts** for preparing datasets and fine-tuning models.
+- **Customizable loss functions** to improve model performance and adaptability.
+
+---
+
+## 📌 Requirements
+To run the code, install the required dependencies:
+```bash
+pip install torch accelerate bitsandbytes peft transformers trl
 ```
-- torch
-- accelerate
-- bitsandbytes
-- peft
-- transformers
-- trl
+
+---
+
+## 📂 Datasets
+### 🔗 **Accessing Data**
+The dataset files can be found at [grid-datasets](https://github.com/panaschristou/grid-datasets). Download and place them inside a folder named `csv_files` within `Dataset-Notebooks`. If the folder does not exist, create it and add the CSV files.
+
+### 📜 **Dataset Preparation**
+- Inside `Dataset-Notebooks`, you'll find the **dataset-generation-script** notebook, which processes each dataset by:
+  - Creating the **prompt**, **input**, and **output** for the model.
+  - Splitting data into **training, validation, and testing** sets.
+  - Generating **auxiliary files** required for training.
+  - Combining different dataset sizes into a **single unified dataset**.
+
+### 🔄 **MATLAB Data Conversion**
+Since our datasets were generated using **MATPOWER** in MATLAB, we provide a **MATLAB-to-Python conversion script** to easily transform `.mat` files into the required format for dataset generation. This ensures a **smooth workflow** for integrating custom datasets.
+
+---
+
+## 🎯 Fine-tuning
+### 📌 **Setup**
+Navigate to the `Model-Notebooks` folder, where you will find templates for fine-tuning Llama 3.1 on your dataset. Before starting, ensure that:
+- Your dataset files are **fully prepared**.
+- The `.sh` script is modified with the correct **dataset path** and **model path**.
+- You specify where to **save the fine-tuned model** and configure relevant **hyperparameters**.
+
+### 🔧 **Customizable Hyperparameters**
+During fine-tuning, you can adjust:
+- **Learning Rate**
+- **Loss Function Components:**
+  - **Invalid Edges Loss**: Penalizes invalid edges in the output.
+  - **Subgraphs Loss**: Penalizes disconnected subgraphs.
+  - **Cycles Loss**: Penalizes cycles in the reconfigured grid.
+- You can use **any combination** of these losses to tailor the training process.
+
+---
+
+## 📊 Model Evaluation
+### 🚀 **Evaluation Workflow**
+We provide templates in `Model-Notebooks` to evaluate your trained model. You can:
+- Load the **fine-tuned model** or a baseline model from **Hugging Face** for comparison.
+- Specify the **number of samples** for evaluation.
+- Save results in the `evaluations` folder as:
+  - **Text responses** (model outputs)
+  - **Metrics in CSV format**
+
+### 📈 **Precomputed Baselines**
+For easier comparison, we provide scripts to evaluate standard models such as **Falcon, Mistral, and Llama** against your fine-tuned version.
+
+### ⚡ **Alternative Evaluation Approach**
+Inside `Dataset-Notebooks`, we include a step-by-step evaluation script that allows you to compute metrics **without queueing a job**, providing a more interactive debugging experience.
+
+---
+
+## 🎯 Why Use LLM4DistReconfig?
+✔ **Fully Automated Pipeline** – From dataset processing to model evaluation.  
+✔ **Highly Customizable** – Modify loss functions, hyperparameters, and datasets with ease.  
+✔ **Supports Multiple Architectures** – Compare results with various transformer models.  
+✔ **Optimized for Power Grids** – Specifically designed for distribution network reconfiguration.  
+
+---
+
+## 🏆 Acknowledgments
+We extend our gratitude to **NYU HPC** for their continuous support in resolving issues and allocating GPU resources that made this research possible.
+
+---
+
+## 🚀 Get Started
+Clone the repository and start training your own LLM for power grid reconfiguration!
+```bash
+git clone https://github.com/panaschristou/LLM4DistReconfig.git
+cd LLM4DistReconfig
 ```
 
-## Datasets
-In order to generate the required datasets that will be used for training and evaluation you will need access to the csv files which can be found here [ [link](https://github.com/panaschristou/grid-datasets) ] and should then be added to the folder csv_files inside Dataset-Notebooks (if the folder does not exist, create it and add the csv files from the link inside).  
-
-Inside the Dataset-Notebooks folder you will find the dataset-generation-script notebook which you would run to generate all the required files to train your model. Going through the notebook we show how to process each individual file by creating the prompt, the input and the ouput to the model, splitting the file into training, validation and testing as well any auxiliary files that may be needed. Upon creating the files for each csv file we also provide functions for combining them together into a single file that can be used to train the model on a dataset with varying network sizes.
-
-In the same folder we provided a file that converts MATLAB data files (.mat) to the required format to be used with the dataset-generation-script (python script) for easy conversion since our datasets were generated using Matpower software in MATLAB. This script can be used to have a smoother experience in using our codes.
-
-## Finetuning
-In the folder Model-Notebooks we provide the templates to fine-tune  a model on our dataset (required you have completed generating the datasets). You will need to modify the sh file with the right path to the dataset that you will use and also for the model. The model could be a model for hugging face for initial fine tuning or your own model that you want to fine tune even more. You will need to specify where to save the fine tuned model as well as other hyper parameters.
-
-For fine tuning you can modify hyper parameters like the learning rate but also which components of the custom loss you want to use like cycles loss, subgraphs loss and invalid edges loss. You can use a combination of each or all of them as well. Invalid edges loss penalizes invalid edges that appear in the output, subgraphs loss penalizes any subgraphs found in the output and cycles loss penalizes any cyles found in the output. 
-
-## Evaluation
-In the folder Model-Notebooks we also provide the templates to evaluate your model. You can evaluate the model by specifying the path to the fine tuned model (or a model from hugging face for comparing with your fine tuned model) and you can specify how many samples to use for evaluation. The results will be saved in the evaluations folder as responses in the form of text and the metrics in the form of csv. We have provided scripts that generate metrics for the plain falcon, mistral and llama models for easier comparison with your fine tuned models as well.
-
-In the Dataset-Notebooks folder we have also included a script that you can step through to generate metrics which provides an alternative to queueing a job.
+Let’s **reconfigure the grid with AI!** ⚡🤖
