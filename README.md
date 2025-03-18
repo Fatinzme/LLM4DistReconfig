@@ -4,7 +4,7 @@
 
 🚀 **Accepted at NAACL 2025 Main Track**  
 🔗 **Paper:** [LLM4DistReconfig](https://arxiv.org/abs/2501.14960)  
-📡 **Developed with the help of:** [NYU HPC](https://sites.google.com/nyu.edu/nyu-hpc/)  
+📡 **Developed with Resources from:** [NYU HPC](https://sites.google.com/nyu.edu/nyu-hpc/)  
 
 ---
 
