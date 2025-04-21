@@ -14,7 +14,7 @@ import subprocess as sp
 from time import perf_counter
 import nvidia_smi
 
-sys.path.append(os.path.abspath('/path/to/LLM-Reconfiguration/Dataset-Notebooks/utils'))
+from utils import dataset_utils, model_utils, generation_utils, monitoring_utils
 from dataset_utils import *
 from model_utils import *
 from generation_utils import *
