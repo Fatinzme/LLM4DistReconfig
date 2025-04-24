@@ -4,6 +4,8 @@ import pickle
 import numpy as np
 import pandas as pd
 import glob as glob
+import os
+import re
 
 def clean_value(value):
     # Function to remove square brackets and convert string representation of lists to actual lists
@@ -20,7 +22,7 @@ def modify_and_save(file_path, set_value, df_column, output_file_path):
     df[df_column] = specific_value
     output_file_path = output_file_path
     df.to_csv(output_file_path, index=False)
-        
+
 def convert_to_dict(data):
     # Convert each row into a dictionary
     data_dict_list = []
@@ -40,7 +42,7 @@ def load_pickle(file_path):
     with open(file_path, 'rb') as f:
         data = pickle.load(f)
     return data
-    
+
 
 def create_inputs(data):
     # Function to create text inputs
@@ -66,7 +68,7 @@ def create_outputs(data):
         )
         outputs.append(output)
     return outputs
-    
+
 def save_to_txt(file_path, entries):
     with open(file_path, 'w') as f:
         for entry in entries:
@@ -80,20 +82,20 @@ def load_entries(file_path):
 
     entries.pop()
     return entries
-    
+
 def create_task_descriptions(task_description, inputs):
     task_descriptions = [task_description] * len(inputs)
     return task_descriptions
-    
+
 def create_prompts(task_descriptions, inputs):
     prompts = [desc + "\n" + inp for desc, inp in zip(task_descriptions, inputs)]
     return prompts
-    
+
 def create_train_df(task_descriptions, inputs, prompts, outputs):
     train_data = {'Task Description': task_descriptions, 'input': inputs, 'prompt': prompts,'output': outputs}
     train_df = pd.DataFrame(train_data)
     return train_df
-    
+
 def generate_random_split(train_df):
     num_samples = len(train_df)
 
@@ -110,7 +112,7 @@ def generate_random_split(train_df):
     
     # Add the split column to the DataFrame
     train_df['split'] = split_values
-    
+
 def combine_csv_files(file_paths, output_file_path):
     """
     Combines multiple CSV files into a single DataFrame and resets the index.
@@ -139,8 +141,8 @@ def combine_csv_files(file_paths, output_file_path):
 
 def formatted_train(input,response)->str:
     return f"<|user|>\n{input}</s>\n<|assistant|>\n{response}</s>"
-    
-    
+
+
 def prepare_train_data(data_path):
     dataset = load_dataset('csv', data_files=data_path)
     print(dataset)
@@ -172,3 +174,70 @@ def prepare_train_data(data_path):
     test_df["text"] = test_df[["prompt", "output"]].apply(lambda x: "<|user|>\n" + x["prompt"] + "</s>\n<|assistant|>\n" + x["output"] + "</s>", axis=1)
     test_dataset = Dataset.from_pandas(test_df)
     return train_dataset, validation_dataset, test_dataset
+
+"""
+按要求为prepare_resupply_data_llama31补充代码，为微调大模型读取数据
+在data_dir_path下应有一个文件："task description.txt"，这个文件存储着任务描述，每个样本这一部分都是一样的。
+case_name指出要读取的算例名称，case_name应当也是在data_dir_path下的文件夹。
+case_name文件夹中包含多个样本，每个样本"dis_fa*.txt"的文件作为输入，由"sol_fa*.txt"的作为输出。*表示编号。
+例如dis_fa1.txt作为输入，sol_fa1.txt作为输出，共同表示一个样本。
+* 样本模板（样本为纯文本格式）
+<|user|>
+复制task description.txt的内容
+复制dis_fa*.txt的内容
+</s>
+<|assistant|>
+复制sol_fa*.txt的内容
+</s>
+
+函数prepare_resupply_data_llama31的任务包括：
+1. 读取data_dir_path下task description.txt文件，得到task_description
+2. 读取data_dir_path下case_name文件夹下的所有文件，将相同编号dis_fa*.txt文件和sol_fa*.txt文件内容配对
+3. 定义只有一列的Dataframe，名为train_df，列名为text。按样本模板得到样本文本，每个样本存储为train_df中的一行。
+6. train_dataset = Dataset.from_pandas(train_df)
+"""
+
+def prepare_resupply_data_llama31(data_dir_path, case_name):
+    # 1. Read task description
+    task_desc_path = os.path.join(data_dir_path, "task description.txt")
+    with open(task_desc_path, "r") as f:
+        task_description = f.read().strip()
+
+    # 2. Process files in case folder
+    case_dir = os.path.join(data_dir_path, case_name)
+    
+    # Collect dis files and build sol file mapping
+    dis_files = glob.glob(os.path.join(case_dir, "dis_fa*.txt"))
+    sol_map = {}
+    for sol_path in glob.glob(os.path.join(case_dir, "sol_fa*.txt")):
+        match = re.search(r"sol_fa(\d+)\.txt", sol_path)
+        if match:
+            num = match.group(1)
+            sol_map[num] = sol_path
+
+    # Create samples
+    samples = []
+    for dis_path in dis_files:
+        dis_name = os.path.basename(dis_path)
+        match = re.search(r"dis_fa(\d+)\.txt", dis_name)
+        if not match:
+            continue
+        num = match.group(1)
+        sol_path = sol_map.get(num)
+        
+        if sol_path:
+            # Read contents
+            with open(dis_path, "r") as f:
+                dis_content = f.read().strip()
+            with open(sol_path, "r") as f:
+                sol_content = f.read().strip()
+            
+            # Create formatted text entry
+            text_entry = f"<|user|>\n{task_description}\n{dis_content}</s>\n<|assistant|>\n{sol_content}</s>"
+            samples.append({"text": text_entry})
+
+    # 3. Create dataframe and dataset
+    train_df = pd.DataFrame(samples)
+    train_dataset = Dataset.from_pandas(train_df)
+    
+    return train_dataset

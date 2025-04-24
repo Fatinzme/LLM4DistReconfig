@@ -1,0 +1,273 @@
+New Bus.Z1 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z2 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z3 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z4 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z5 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z6 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z7 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z8 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z9 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z10 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z11 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z12 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z13 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z14 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z15 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z16 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z17 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z18 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z19 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z20 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z21 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z22 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z23 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z24 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z25 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z26 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z27 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z28 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z29 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z30 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z31 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z32 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z33 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z34 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z35 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z36 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z37 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z38 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z39 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z40 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z41 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z42 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z43 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z44 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z45 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z46 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z47 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z48 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z49 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z50 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z51 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z52 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z53 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z54 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z55 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z56 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z57 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z58 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z59 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z60 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z61 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z62 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z63 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z64 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z65 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z66 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z67 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z68 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z69 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z70 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z71 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z72 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z73 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z74 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z75 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z76 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z77 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z78 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z79 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z80 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z81 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z82 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z83 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z84 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z85 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z86 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z87 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z88 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z89 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z90 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z91 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z92 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z93 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+New Bus.Z94 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
+
+NEW Line.Z8Z10 bus1=Z8 bus2=Z10 R1=0.235800 X1=0.484200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z8Z11 bus1=Z8 bus2=Z11 R1=0.104800 X1=0.215200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z12Z13 bus1=Z12 bus2=Z13 R1=0.078600 X1=0.161400 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z13Z14 bus1=Z13 bus2=Z14 R1=0.340600 X1=0.694400 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z14Z15 bus1=Z14 bus2=Z15 R1=0.026200 X1=0.053800 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z14Z16 bus1=Z14 bus2=Z16 R1=0.078600 X1=0.161400 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z17Z18 bus1=Z17 bus2=Z18 R1=0.113400 X1=0.386400 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z18Z19 bus1=Z18 bus2=Z19 R1=0.052400 X1=0.107600 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z1Z2 bus1=Z1 bus2=Z2 R1=0.194400 X1=0.662400 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z19Z20 bus1=Z19 bus2=Z20 R1=0.052400 X1=0.107600 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z16Z21 bus1=Z16 bus2=Z21 R1=0.537100 X1=1.082400 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z20Z21 bus1=Z20 bus2=Z21 R1=0.157200 X1=0.322800 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z21Z22 bus1=Z21 bus2=Z22 R1=0.039300 X1=0.080700 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z22Z23 bus1=Z22 bus2=Z23 R1=0.170300 X1=0.349700 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z23Z24 bus1=Z23 bus2=Z24 R1=0.235800 X1=0.484200 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z24Z25 bus1=Z24 bus2=Z25 R1=0.157200 X1=0.322800 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z24Z26 bus1=Z24 bus2=Z26 R1=0.196500 X1=0.403500 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z26Z27 bus1=Z26 bus2=Z27 R1=0.131000 X1=0.269000 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z28Z29 bus1=Z28 bus2=Z29 R1=0.056700 X1=0.193200 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z2Z3 bus1=Z2 bus2=Z3 R1=0.209600 X1=0.430400 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z19Z30 bus1=Z19 bus2=Z30 R1=0.091700 X1=0.188300 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z29Z30 bus1=Z29 bus2=Z30 R1=0.104800 X1=0.215200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z30Z31 bus1=Z30 bus2=Z31 R1=0.248900 X1=0.511100 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z31Z32 bus1=Z31 bus2=Z32 R1=0.048600 X1=0.165600 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z32Z33 bus1=Z32 bus2=Z33 R1=0.131000 X1=0.269000 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z34Z35 bus1=Z34 bus2=Z35 R1=0.196500 X1=0.396000 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z35Z36 bus1=Z35 bus2=Z36 R1=0.131000 X1=0.269000 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z32Z37 bus1=Z32 bus2=Z37 R1=0.052400 X1=0.107600 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z36Z37 bus1=Z36 bus2=Z37 R1=0.131000 X1=0.269000 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z37Z38 bus1=Z37 bus2=Z38 R1=0.026200 X1=0.053800 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z38Z39 bus1=Z38 bus2=Z39 R1=0.170300 X1=0.349700 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z3Z4 bus1=Z3 bus2=Z4 R1=0.235800 X1=0.484200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z39Z40 bus1=Z39 bus2=Z40 R1=0.052400 X1=0.107600 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z40Z41 bus1=Z40 bus2=Z41 R1=0.497800 X1=1.022200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z41Z42 bus1=Z41 bus2=Z42 R1=0.039300 X1=0.080700 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z42Z43 bus1=Z42 bus2=Z43 R1=0.039300 X1=0.080700 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z33Z44 bus1=Z33 bus2=Z44 R1=0.078600 X1=0.161400 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z43Z44 bus1=Z43 bus2=Z44 R1=0.078600 X1=0.161400 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z44Z45 bus1=Z44 bus2=Z45 R1=0.209600 X1=0.430400 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z43Z46 bus1=Z43 bus2=Z46 R1=0.196500 X1=0.403500 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z45Z47 bus1=Z45 bus2=Z47 R1=0.196500 X1=0.403500 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z46Z47 bus1=Z46 bus2=Z47 R1=0.209600 X1=0.430400 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z13Z49 bus1=Z13 bus2=Z49 R1=0.131000 X1=0.269000 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z48Z49 bus1=Z48 bus2=Z49 R1=0.048600 X1=0.165600 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z4Z5 bus1=Z4 bus2=Z5 R1=0.091700 X1=0.188300 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z49Z50 bus1=Z49 bus2=Z50 R1=0.039300 X1=0.080700 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z50Z51 bus1=Z50 bus2=Z51 R1=0.131000 X1=0.269000 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z39Z52 bus1=Z39 bus2=Z52 R1=0.026200 X1=0.053800 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z51Z52 bus1=Z51 bus2=Z52 R1=0.235800 X1=0.484200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z53Z54 bus1=Z53 bus2=Z54 R1=0.243000 X1=0.828000 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z54Z55 bus1=Z54 bus2=Z55 R1=0.065500 X1=0.134500 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z55Z56 bus1=Z55 bus2=Z56 R1=0.065500 X1=0.134500 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z56Z57 bus1=Z56 bus2=Z57 R1=0.039300 X1=0.080700 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z57Z58 bus1=Z57 bus2=Z58 R1=0.078600 X1=0.161400 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z58Z59 bus1=Z58 bus2=Z59 R1=0.039300 X1=0.080700 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z5Z6 bus1=Z5 bus2=Z6 R1=0.209600 X1=0.430300 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z59Z60 bus1=Z59 bus2=Z60 R1=0.078600 X1=0.161400 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z60Z61 bus1=Z60 bus2=Z61 R1=0.052400 X1=0.107600 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z6Z62 bus1=Z6 bus2=Z62 R1=0.131000 X1=0.269000 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z61Z62 bus1=Z61 bus2=Z62 R1=0.131000 X1=0.269000 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z63Z64 bus1=Z63 bus2=Z64 R1=0.226800 X1=0.772800 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z64Z65 bus1=Z64 bus2=Z65 R1=0.537100 X1=1.102900 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z65Z66 bus1=Z65 bus2=Z66 R1=0.052400 X1=0.107600 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z66Z67 bus1=Z66 bus2=Z67 R1=0.040500 X1=0.138000 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z67Z68 bus1=Z67 bus2=Z68 R1=0.039300 X1=0.080700 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z8Z68 bus1=Z8 bus2=Z68 R1=0.131000 X1=0.269000 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z68Z69 bus1=Z68 bus2=Z69 R1=0.026200 X1=0.053800 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z6Z7 bus1=Z6 bus2=Z7 R1=0.039300 X1=0.080700 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z69Z70 bus1=Z69 bus2=Z70 R1=0.104800 X1=0.215200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z70Z71 bus1=Z70 bus2=Z71 R1=0.235800 X1=0.484200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z60Z72 bus1=Z60 bus2=Z72 R1=0.039300 X1=0.080700 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z71Z72 bus1=Z71 bus2=Z72 R1=0.024300 X1=0.082800 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z73Z74 bus1=Z73 bus2=Z74 R1=0.048600 X1=0.165600 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z74Z75 bus1=Z74 bus2=Z75 R1=0.170300 X1=0.349700 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z75Z76 bus1=Z75 bus2=Z76 R1=0.121500 X1=0.414000 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z76Z77 bus1=Z76 bus2=Z77 R1=0.218700 X1=0.745200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z77Z78 bus1=Z77 bus2=Z78 R1=0.048600 X1=0.165600 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z78Z79 bus1=Z78 bus2=Z79 R1=0.072900 X1=0.248400 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z7Z8 bus1=Z7 bus2=Z8 R1=0.040500 X1=0.138000 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z79Z80 bus1=Z79 bus2=Z80 R1=0.056700 X1=0.193200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z14Z81 bus1=Z14 bus2=Z81 R1=0.340600 X1=0.699400 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z80Z81 bus1=Z80 bus2=Z81 R1=0.026200 X1=0.052800 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z82Z83 bus1=Z82 bus2=Z83 R1=0.324000 X1=1.104000 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z83Z84 bus1=Z83 bus2=Z84 R1=0.032400 X1=0.110400 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z84Z85 bus1=Z84 bus2=Z85 R1=0.056700 X1=0.193200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z15Z86 bus1=Z15 bus2=Z86 R1=0.458500 X1=0.941500 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z85Z86 bus1=Z85 bus2=Z86 R1=0.048600 X1=0.165600 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z87Z88 bus1=Z87 bus2=Z88 R1=0.251100 X1=0.855600 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z88Z89 bus1=Z88 bus2=Z89 R1=0.129600 X1=0.441600 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z8Z9 bus1=Z8 bus2=Z9 R1=0.104800 X1=0.215200 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z89Z90 bus1=Z89 bus2=Z90 R1=0.048600 X1=0.165600 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z90Z91 bus1=Z90 bus2=Z91 R1=0.131000 X1=0.264000 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z91Z92 bus1=Z91 bus2=Z92 R1=0.131000 X1=0.264000 B1=0.000000 status=1 type=S unit=none responseT=10 
+NEW Line.Z92Z93 bus1=Z92 bus2=Z93 R1=0.091700 X1=0.188300 B1=0.000000 status=1 type=L unit=none
+NEW Line.Z23Z94 bus1=Z23 bus2=Z94 R1=0.078600 X1=0.161400 B1=0.000000 status=0 type=S unit=none responseT=10 
+NEW Line.Z93Z94 bus1=Z93 bus2=Z94 R1=0.314400 X1=0.645600 B1=0.000000 status=1 type=L unit=none
+
+New Load.LD3 bus1=Z3 model=1 P=100.00 Q=50.00
+New Load.LD4 bus1=Z4 model=1 P=300.00 Q=200.00
+New Load.LD5 bus1=Z5 model=1 P=350.00 Q=250.00
+New Load.LD6 bus1=Z6 model=1 P=220.00 Q=100.00
+New Load.LD7 bus1=Z7 model=1 P=800.00 Q=700.00
+New Load.LD8 bus1=Z8 model=1 P=400.00 Q=320.00
+New Load.LD9 bus1=Z9 model=1 P=300.00 Q=200.00
+New Load.LD10 bus1=Z10 model=1 P=300.00 Q=230.00
+New Load.LD11 bus1=Z11 model=1 P=300.00 Q=260.00
+New Load.LD14 bus1=Z14 model=1 P=1200.00 Q=800.00
+New Load.LD15 bus1=Z15 model=1 P=750.00 Q=600.00
+New Load.LD16 bus1=Z16 model=1 P=700.00 Q=500.00
+New Load.LD19 bus1=Z19 model=1 P=300.00 Q=150.00
+New Load.LD20 bus1=Z20 model=1 P=500.00 Q=350.00
+New Load.LD21 bus1=Z21 model=1 P=700.00 Q=400.00
+New Load.LD22 bus1=Z22 model=1 P=1100.00 Q=1000.00
+New Load.LD23 bus1=Z23 model=1 P=300.00 Q=300.00
+New Load.LD24 bus1=Z24 model=1 P=400.00 Q=350.00
+New Load.LD25 bus1=Z25 model=1 P=50.00 Q=20.00
+New Load.LD26 bus1=Z26 model=1 P=50.00 Q=20.00
+New Load.LD27 bus1=Z27 model=1 P=50.00 Q=10.00
+New Load.LD29 bus1=Z29 model=1 P=50.00 Q=30.00
+New Load.LD30 bus1=Z30 model=1 P=1000.00 Q=600.00
+New Load.LD31 bus1=Z31 model=1 P=1000.00 Q=700.00
+New Load.LD32 bus1=Z32 model=1 P=1800.00 Q=1300.00
+New Load.LD33 bus1=Z33 model=1 P=200.00 Q=120.00
+New Load.LD36 bus1=Z36 model=1 P=1600.00 Q=1500.00
+New Load.LD37 bus1=Z37 model=1 P=200.00 Q=150.00
+New Load.LD38 bus1=Z38 model=1 P=200.00 Q=100.00
+New Load.LD39 bus1=Z39 model=1 P=800.00 Q=600.00
+New Load.LD40 bus1=Z40 model=1 P=100.00 Q=60.00
+New Load.LD41 bus1=Z41 model=1 P=100.00 Q=60.00
+New Load.LD42 bus1=Z42 model=1 P=20.00 Q=10.00
+New Load.LD43 bus1=Z43 model=1 P=20.00 Q=10.00
+New Load.LD44 bus1=Z44 model=1 P=20.00 Q=10.00
+New Load.LD45 bus1=Z45 model=1 P=20.00 Q=10.00
+New Load.LD46 bus1=Z46 model=1 P=200.00 Q=160.00
+New Load.LD47 bus1=Z47 model=1 P=50.00 Q=30.00
+New Load.LD50 bus1=Z50 model=1 P=30.00 Q=20.00
+New Load.LD51 bus1=Z51 model=1 P=750.00 Q=600.00
+New Load.LD52 bus1=Z52 model=1 P=200.00 Q=150.00
+New Load.LD57 bus1=Z57 model=1 P=200.00 Q=160.00
+New Load.LD58 bus1=Z58 model=1 P=800.00 Q=600.00
+New Load.LD59 bus1=Z59 model=1 P=500.00 Q=300.00
+New Load.LD60 bus1=Z60 model=1 P=500.00 Q=350.00
+New Load.LD61 bus1=Z61 model=1 P=500.00 Q=300.00
+New Load.LD62 bus1=Z62 model=1 P=200.00 Q=80.00
+New Load.LD65 bus1=Z65 model=1 P=30.00 Q=20.00
+New Load.LD66 bus1=Z66 model=1 P=600.00 Q=420.00
+New Load.LD68 bus1=Z68 model=1 P=20.00 Q=10.00
+New Load.LD69 bus1=Z69 model=1 P=20.00 Q=10.00
+New Load.LD70 bus1=Z70 model=1 P=200.00 Q=130.00
+New Load.LD71 bus1=Z71 model=1 P=300.00 Q=240.00
+New Load.LD72 bus1=Z72 model=1 P=300.00 Q=200.00
+New Load.LD75 bus1=Z75 model=1 P=50.00 Q=30.00
+New Load.LD77 bus1=Z77 model=1 P=400.00 Q=360.00
+New Load.LD80 bus1=Z80 model=1 P=1900.00 Q=1500.00
+New Load.LD81 bus1=Z81 model=1 P=200.00 Q=150.00
+New Load.LD85 bus1=Z85 model=1 P=1200.00 Q=900.00
+New Load.LD86 bus1=Z86 model=1 P=300.00 Q=180.00
+New Load.LD89 bus1=Z89 model=1 P=400.00 Q=360.00
+New Load.LD90 bus1=Z90 model=1 P=2000.00 Q=1300.00
+New Load.LD91 bus1=Z91 model=1 P=200.00 Q=140.00
+New Load.LD92 bus1=Z92 model=1 P=500.00 Q=360.00
+New Load.LD93 bus1=Z93 model=1 P=100.00 Q=30.00
+New Load.LD94 bus1=Z94 model=1 P=400.00 Q=360.00
+
+New VSource.F1 bus1=Z1 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
+New VSource.F2 bus1=Z12 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
+New VSource.F3 bus1=Z17 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
+New VSource.F4 bus1=Z28 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
+New VSource.F5 bus1=Z34 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
+New VSource.F6 bus1=Z48 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
+New VSource.F7 bus1=Z53 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
+New VSource.F8 bus1=Z63 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
+New VSource.F9 bus1=Z73 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
+New VSource.F10 bus1=Z82 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
+New VSource.F11 bus1=Z87 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
+
+New fault.fa64 location=Line.Z71Z72 status=1
+

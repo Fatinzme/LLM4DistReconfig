@@ -1,0 +1,563 @@
+{
+ "Bus": {
+    "name": "Bus",
+    "fields": [
+        {
+            "no": 1,
+            "name": "name",
+            "desc": "母线名称",
+            "descEn":"Bus name",
+            "type": "str",
+            "unique": true,
+            "nullable": false,
+            "default": null,
+            "range": null
+        },
+        {
+            "no": 2,
+            "name": "kV",
+            "desc": "额定电压，取线电压值，单位kV",
+            "descEn":"Rated Line-to-line voltage, unit kV",
+            "type": "double",
+            "unique": false,
+            "nullable": false,
+            "default": null,
+            "range": ">0"
+        },
+        {
+            "no":3,
+            "name":"Vmaxpu",
+            "desc":"允许最大电压，单位p.u.",
+            "descEn":"Maximum per unit voltage for safety, in p.u.",
+            "type":"double",
+            "unique":false,
+            "nullable":true,
+            "default":1.1,
+            "range":">0"
+        },{
+            "no":4,
+            "name":"Vminpu",
+            "desc":"允许最小电压，单位p.u.",
+            "descEn":"Minimum per unit voltage for safety, in p.u.",
+            "type":"double",
+            "unique":false,
+            "nullable":true,
+            "default":0.8,
+            "range":">0"
+        }
+    ],
+    "description": [
+        "Buses are the connection point for all other circuit elements. In many power system analysis programs, \"bus\" and \"node\" are nearly synonymous"
+    ]
+    },
+    "VSource": {
+        "name": "Voltage Source",
+        "fields": [
+            {
+                "no": 1,
+                "name": "bus1",
+                "desc": "电源所接交流母线",
+                "descEn":"Name of bus to which the source is connected",
+                "type": "int",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": ">0"
+            },
+            {
+                "no": 2,
+                "name": "name",
+                "desc": "电源名称",
+                "descEn":"Source name",
+                "type": "str",
+                "unique": true,
+                "nullable": false,
+                "default": null,
+                "range": null
+            },
+            {
+                "no": 3,
+                "name": "basekV",
+                "desc": "三相交流电源额定电压，单位kV",
+                "descEn":"Source rated voltage, unit kV",
+                "type": "double",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": ">0"
+            },
+            {
+                "no": 4,
+                "name": "OutputPU",
+                "desc": "电源输出电压p.u.",
+                "descEn":"Actual per unit at which the source is operating. Assumed balanced for all phases.",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 1.0,
+                "range": ">=0"
+            },
+            {
+                "no": 5,
+                "name": "Angle",
+                "desc": "初始相角°",
+                "descEn":"Base angle, degrees, of the first phase.",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 0.0,
+                "range": ">=-180 and <=180"
+            },
+            {
+                "no": 6,
+                "name": "R1",
+                "desc": "正序戴维南等效电阻，单位Ω",
+                "descEn":"The source impedance. Positive-sequence resistance,ohms",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 0.0,
+                "range": ">=0"
+            },
+            {
+                "no": 7,
+                "name": "X1",
+                "desc": "正序戴维南等效电抗，单位Ω",
+                "descEn":"The source impedance. Positive-sequence reactance,ohms",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 1e-5,
+                "range": ">=0"
+            },
+            {
+                "no": 8,
+                "name": "status",
+                "desc": "Source状态: 1:启用, 0:停用",
+                "descEn":"Source status: 1:in service, 0:out service",
+                "type": "int",
+                "unique": false,
+                "nullable": true,
+                "default": 1,
+                "range": null
+            },{
+                "no":9,
+                "name":"Capacity",
+                "desc":"电源容量，单位kVA",
+                "descEn":"Source capacity, unit kVA",
+                "type":"double",
+                "unique":false,
+                "nullable":true,
+                "default":10000,
+                "range":">=0"
+            }
+        ],
+        "description": [
+            "A Vsource object is a two-terminal, multi-phase Thevenin (short circuit) equivalent. That is, it is a voltage source behind an impedance."
+        ]
+    },
+    "Line": {
+        "name": "Distribution Line",
+        "fields": [
+            {
+                "no": 1,
+                "name": "bus1",
+                "desc": "起始节点",
+                "descEn":"Name of bus for terminal 1",
+                "type": "str",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": null
+            },
+            {
+                "no": 2,
+                "name": "bus2",
+                "desc": "结束节点",
+                "descEn":"Name of bus for terminal 2",
+                "type": "int",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": ">0"
+            },
+            {
+                "no": 3,
+                "name": "name",
+                "desc": "开关名称或线路名称",
+                "descEn":"Switch name or line name",
+                "type": "str",
+                "unique": true,
+                "nullable": false,
+                "default": null,
+                "range": null
+            },
+            {
+                "no": 4,
+                "name": "type",
+                "desc": "S:开关，L:交流线路",
+                "descEn":"S=switch, L=line",
+                "type": "char",
+                "unique": false,
+                "nullable": true,
+                "default": "L",
+                "range": [
+                    "S",
+                    "L"
+                ]
+            },
+            {
+                "no": 5,
+                "name": "status",
+                "desc": "状态：0为开路或停用；1为闭合或使用中",
+                "descEn":"Status: 0=open, 1=closed",
+                "type": "int",
+                "unique": false,
+                "nullable": true,
+                "default": 1,
+                "range": null
+            },
+            {
+                "no": 6,
+                "name": "branchcode",
+                "desc": "线路或开关型号",
+                "descEn":"Name of an existing BranchCode object containing impedance definitions",
+                "type": "str",
+                "unique": false,
+                "nullable": true,
+                "default": "",
+                "range": null
+            },
+            {
+                "no": 7,
+                "name": "length",
+                "desc": "线路长度",
+                "descEn":"Line length",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 1.0,
+                "range": ">=0"
+            },
+            {
+                "no": 8,
+                "name": "unit",
+                "desc": "长度单位",
+                "type": "str",
+                "unique": false,
+                "nullable": true,
+                "default": "km",
+                "range": [
+                    "km",
+                    "m",
+					"none"
+                ]
+            },
+            {
+                "no": 9,
+                "name": "R1",
+                "desc": "每单位长度正序电阻，单位Ω",
+                "descEn": "Positive sequence resistance, ohms per unit length",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 0.0,
+                "range": ">=0"
+            },
+            {
+                "no": 10,
+                "name": "X1",
+                "desc": "每单位长度正序电抗，单位Ω ",
+                "descEn": "Positive sequence reactance, ohms per unit length",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 1e-5,
+                "range": ">0"
+            },
+            {
+                "no": 11,
+                "name": "B1",
+                "desc": "每单位长度正序电纳，单位μS",
+                "descEn": "Positive sequence capacitance, microS per unit length",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 0.0,
+                "range": null
+            },{
+                "no":12,
+                "name":"responseT",
+                "desc":"开关响应时间，单位秒，仅在type=S时使用",
+                "descEn":"Response time in seconds. Only used when the type=S.",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 0.05,
+                "range": ">=0"
+            }
+        ],
+        "description": [
+            "The Line element is used to model most multi-phase, two-port lines or cables. It is a “Pi” model with shunt capacitance. This is a Power Delivery element described by its impedance. Impedances may be specified by symmetrical component values or by matrix values. Alternatively, you may simply refer to an existing BranchCode object from which the impedance values will be copied.",
+            "There two alternative way to give parameter: \n1. If the branchcode field is specified, the impedance will be computed from the specified BranchCode object according to the unit and length. \n2.If R1, X1, B1 are specified, these values will be assigned to the impedance.",
+			"If Unit=none or Length=0.0 are specified, R1, X1, B1 are used to give the impendence of the whole Line."
+        ]
+    },
+    "LineCode": {
+        "name": "Line code",
+        "fields": [{
+                "no": 1,
+                "name": "name",
+                "desc": "型号名称",
+                "descEn":"Name of LineCode object",
+                "type": "str",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": null
+            },
+            {
+                "no": 2,
+                "name": "unit",
+                "desc": "长度单位",
+                "descEn":"Length unit",
+                "type": "str",
+                "unique": false,
+                "nullable": true,
+                "default": "km",
+                "range": [
+                    "km",
+                    "m"
+                ]
+            },
+            {
+                "no": 3,
+                "name": "R1",
+                "desc": "每单位长度正序电阻，单位Ω",
+                "descEn":"Positive sequence resistance, ohms per unit length",
+                "type": "double",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": ">=0"
+            },
+            {
+                "no": 4,
+                "name": "X1",
+                "desc": "每单位长度正序电抗，单位Ω ",
+                "descEn":"Positive sequence reactance, ohms per unit length",
+                "type": "double",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": ">0"
+            },
+            {
+                "no": 5,
+                "name": "B1",
+                "desc": "每单位长度正序电纳，单位μS",
+                "descEn":"Positive sequence capacitance, microS per unit length",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 0.0,
+                "range": null
+            }],
+            "description":[
+                "LineCode objects are general library objects that contain impedance characteristics for lines and cables. In most distribution analysis programs, one can describe a line by its LineCode and its length. LineCode objects were defined in a separate file."
+            ]
+    },
+    "Load": {
+        "name": "Load",
+        "fields": [
+            {
+                "no": 1,
+                "name": "bus1",
+                "desc": "负荷所接母线编号",
+                "descEn": "Bus id to which load is connected",
+                "type": "int",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": ">0"
+            },
+            {
+                "no": 2,
+                "name": "name",
+                "desc": "负荷名称",
+                "descEn": "Name of load object",
+                "type": "str",
+                "unique": true,
+                "nullable": false,
+                "default": null,
+                "range": null
+            },
+            {
+                "no": 3,
+                "name": "Model",
+                "desc": "负荷类型，指出负荷随电压怎样变化",
+                "descEn": "Load model,expressed as an integer, defining how the load will vary with voltage.\n1: Constant P and constant Q (Default): Commonly used for power flow studies.\n2: Constant Z (or constant impedance)\n5: Constant I (or constant current magnitude)",
+                "type": "str",
+                "unique": false,
+                "nullable": true,
+                "default": 1,
+                "range": [
+                    1,
+                    2,
+                    3
+                ]
+            },
+            {
+                "no": 4,
+                "name": "status",
+                "desc": "状态：0为不接入；1为接入",
+                "descEn": "Status, 0=out service, 1=in service",
+                "type": "int",
+                "unique": false,
+                "nullable": true,
+                "default": 1,
+                "range": [0,1]
+            },
+            {
+                "no": 5,
+                "name": "P",
+                "desc": "三相总有功功率,单位kW",
+                "descEn": "Nominal active power, kW, for the load. Total of all phases.",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 0.0,
+                "range": null
+            },
+            {
+                "no": 6,
+                "name": "Q",
+                "desc": "三相总无功功率,单位kvar",
+                "descEn": "Nominal reactive power, kvar, for the load. Total of all phases.",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 0.0,
+                "range": null
+            },
+            {
+                "no": 7,
+                "name": "LoadShape",
+                "desc": "负荷曲线名称",
+                "descEn": "Name of Daily load shape.",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": null,
+                "range": null
+            }
+        ],
+        "description":[
+            "A Load is a complicated Power Conversion element that is at the heart of many analyses. It is basically defined by its P and Q.Loads are assumed balanced for the number of phases specified."
+        ]
+    },
+    "LoadShape": {
+        "name": "Load Shape",
+        "fields": [
+            {
+                "no": 1,
+                "name": "name",
+                "desc": "负荷曲线名称",
+                "descEn": "Name of load shape",
+                "type": "str",
+                "unique": true,
+                "nullable": false,
+                "default": null,
+                "range": null
+            },
+            {
+                "no": 2,
+                "name": "Interval",
+                "desc": "时间间隔，单位小时",
+                "descEn": "Time interval of multiplier, in hours.",
+                "type": "double",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": null
+            },
+            {
+                "no": 3,
+                "name": "Npts",
+                "desc": "数据点数量",
+                "descEn": "Number of points to expect when defining the curve",
+                "type": "int",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": null
+            },
+            {
+                "no": 4,
+                "name": "Multiplier",
+                "desc": "曲线乘子，数量与Npts对应",
+                "descEn": "Array of multiplier values.Looking for Npts values.",
+                "type": "Array[double]",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": null
+            }
+        ],
+        "description":[
+            "A LoadShape object consists of a series of multipliers, typically ranging from 0.0 to 1.0 that are applied to the base kW values of the load to represent variation of the load over some time period. Load shapes are generally fixed interval.",
+            "The loadshape arrays are entered directly in text,separated by comma ,e.g. \" Multiplier=[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]\""
+        ]
+    },
+    "fault":{
+        "name": "fault",
+        "fields": [
+            {
+                "no": 1,
+                "name": "name",
+                "desc": "故障名称",
+                "descEn": "Name of fault",
+                "type": "str",
+                "unique": true,
+                "nullable": false,
+                "default": null,
+                "range": null
+            },
+            {
+                "no": 2,
+                "name": "location",
+                "desc": "故障位置，线路或者节点",
+                "descEn": "Name of bus or line where this fault happens.",
+                "type": "str",
+                "unique": false,
+                "nullable": false,
+                "default": null,
+                "range": null
+            },
+            {
+                "no": 3,
+                "name": "repair",
+                "desc": "故障恢复时间，单位小时",
+                "descEn": "Hours to repair",
+                "type": "double",
+                "unique": false,
+                "nullable": true,
+                "default": 0.2,
+                "range": ">=0"
+            },
+            {
+                "no": 4,
+                "name": "status",
+                "desc": "状态：0为故障不生效；1为故障生效",
+                "descEn": "Status, 1=enable, 0=disable",
+                "type": "int",
+                "unique": false,
+                "nullable": true,
+                "default": 1,
+                "range": [0,1]
+            }
+            
+        ]
+    }
+
+}
