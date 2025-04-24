@@ -14,7 +14,7 @@ import subprocess as sp
 from time import perf_counter
 import nvidia_smi
 
-from utils import dataset_utils, model_utils, generation_utils, monitoring_utils
+# sys.path.append(os.path.abspath('/home/ubuntu/LLMCODE/LLM4DistReconfig/Dataset-Notebooks/utils'))
 from dataset_utils import *
 from model_utils import *
 from generation_utils import *
@@ -28,18 +28,18 @@ def parse_args():
     parser.add_argument('--num_train_epochs', type=int, required=True, help='Number of training epochs.')
     parser.add_argument('--batch_size', type=int, required=True, help='Batch size per device.')
     parser.add_argument('--max_new_tokens', type=int, required=True, help='Maximum number of new tokens generated.')
-    parser.add_argument('--model_name_hf', type=str, required=True, help='Huggingface model name for upload.')
-    parser.add_argument('--tokenizer_name_hf', type=str, required=True, help='Huggingface tokenizer name for upload.')
+    # parser.add_argument('--model_name_hf', type=str, required=True, help='Huggingface model name for upload.')
+    # parser.add_argument('--tokenizer_name_hf', type=str, required=True, help='Huggingface tokenizer name for upload.')
     parser.add_argument('--custom_loss', type=int, required=True, help='For regular loss use 0. For custom loss with 3 penalty terms use 1.')
     parser.add_argument('--custom_loss_config', type=str, required=True, help='Custom loss configuration.')
     parser.add_argument('--cycles_loss_scaling_factor', type=float, required=True, help='Scaling factor for cycles loss')
     parser.add_argument('--model_for_generation_path', type=str, required=True, help='Model path to use for generation.')
-    parser.add_argument(
-        "--huggingface_token",
-        type=str,
-        required=False,
-        help="Access token of Huggingface hub",
-    )
+    # parser.add_argument(
+    #     "--huggingface_token",
+    #     type=str,
+    #     required=False,
+    #     help="Access token of Huggingface hub",
+    # )
     return parser.parse_args()
 
 def main():
@@ -47,8 +47,8 @@ def main():
 
     print('Training configurations: \n', args)
 
-    access_token = args.huggingface_token
-    login(token=access_token)
+    # access_token = args.huggingface_token
+    # login(token=access_token)
 
     os.getcwd()
 
@@ -61,12 +61,18 @@ def main():
 
     model, tokenizer = get_model_and_tokenizer(model_id)
 
+    # device = "cuda" if torch.cuda.is_available() else "cpu"
+    # if torch.cuda.device_count()  > 1:
+    #     model = torch.nn.DataParallel(model)
+
     get_memory_allocated_cached()
 
     peft_config = LoraConfig(
             r=8, lora_alpha=16, lora_dropout=0.05, bias="none", task_type="CAUSAL_LM"
         )
 
+
+    # 可能要把默认
     training_arguments = TrainingArguments(
             output_dir=output_model,
             per_device_train_batch_size=args.batch_size,
@@ -79,7 +85,9 @@ def main():
             num_train_epochs=args.num_train_epochs,
             fp16=True,
             report_to="none",
-            gradient_checkpointing=True
+            gradient_checkpointing=True,
+##############################################
+
         )
 
     if args.custom_loss==0:
@@ -89,13 +97,15 @@ def main():
             peft_config=peft_config,
             dataset_text_field="text",
             args=training_arguments,
-            tokenizer=tokenizer,
+            # tokenizer=tokenizer,
             packing=False,
             max_seq_length=4096
+            
         )
 
     elif args.custom_loss==1:
         class CustomTrainer(SFTTrainer):
+            # 源码有问题进行更新
             def compute_loss(self, model, inputs, return_outputs=False):
                 # Get the model loss
                 outputs = model(**inputs)
@@ -104,6 +114,7 @@ def main():
                 # Detokenize inputs and outputs
                 input_text = self.tokenizer.batch_decode(inputs['input_ids'], skip_special_tokens=True)
                 output_text = self.tokenizer.batch_decode(outputs.logits.argmax(dim=-1), skip_special_tokens=True)
+                #源码已经进行更新 
 
                 # Get available lines and predicted lines and use them to get the outputted graph edges
                 available_lines = parse_available_lines(input_text[0])
@@ -151,11 +162,12 @@ def main():
             model=model,
             train_dataset=train_dataset,
             peft_config=peft_config,
-            dataset_text_field="text",
             args=training_arguments,
-            tokenizer=tokenizer,
-            packing=False,
-            max_seq_length=4096
+            processing_class=tokenizer,
+            # packing=False,
+            # max_seq_length=4096,
+            # dataset_text_field="text",
+            # 存在问题，需要查看源码
         )
 
     get_memory_allocated_cached()
@@ -175,10 +187,15 @@ def main():
 
     model_with_peft = peft_merge_unload(model_id, model_path)
 
-    print(model)
 
-    model_with_peft.push_to_hub(args.model_name_hf, access_token)
-    tokenizer.push_to_hub(args.tokenizer_name_hf, access_token)
+
+    print(model_with_peft)
+
+    # model_with_peft.module.save_pretrained("./lora_finetuned_model") if torch.cuda.device_count() > 1 else model_with_peft.save_pretrained("./lora_finetuned_model")
+    # tokenizer.save_pretrained("./lora_finetuned_model")
+
+    # model_with_peft.push_to_hub(args.model_name_hf, access_token)
+    # tokenizer.push_to_hub(args.tokenizer_name_hf, access_token)
 
     generate_response(user_input=test_dataset['prompt'][0], model=model_with_peft, tokenizer =tokenizer)
 

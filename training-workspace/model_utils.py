@@ -5,15 +5,18 @@ import ast
 import networkx as nx
 
 
+
 def get_model_and_tokenizer(model_id):
 
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    tokenizer = AutoTokenizer.from_pretrained(model_id, local_files_only=True)
     tokenizer.pad_token = tokenizer.eos_token
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype="float16", bnb_4bit_use_double_quant=True
     )
     model = AutoModelForCausalLM.from_pretrained(
         model_id, 
+        local_files_only=True,
+        # device_map=dev_map,
         quantization_config=bnb_config, 
         device_map="auto"
     )
@@ -26,9 +29,11 @@ def get_model(model_id):
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype="float16", bnb_4bit_use_double_quant=True
     )
-    
+
     model = AutoModelForCausalLM.from_pretrained(
         model_id, 
+        local_files_only=True,
+        # device_map=dev_map,
         quantization_config=bnb_config, 
         device_map="auto"
     )
@@ -38,8 +43,8 @@ def get_model(model_id):
     return model
     
 def get_tokenizer(model_id):
-    
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+    tokenizer = AutoTokenizer.from_pretrained(model_id, local_files_only=True)
     tokenizer.pad_token = tokenizer.eos_token
     
     return tokenizer
