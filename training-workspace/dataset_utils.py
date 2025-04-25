@@ -239,5 +239,6 @@ def prepare_resupply_data_llama31(data_dir_path, case_name):
     # 3. Create dataframe and dataset
     train_df = pd.DataFrame(samples)
     train_dataset = Dataset.from_pandas(train_df)
-    
-    return train_dataset
+    test_dataset = None
+
+    return train_dataset,test_dataset

@@ -22,7 +22,8 @@ from monitoring_utils import *
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train a language model with specific configurations.")
-    parser.add_argument('--data_path', type=str, required=True, help='Path to the dataset.')
+    parser.add_argument('--data_path', type=str, required=True, help='Path to the datasets dir.')
+    parser.add_argument('--case_name', type=str, required=True, help='dataset name.')
     parser.add_argument('--model_id', type=str, required=True, help='Model ID to use.')
     parser.add_argument('--output_model', type=str, required=True, help='Output model path.')
     parser.add_argument('--num_train_epochs', type=int, required=True, help='Number of training epochs.')
@@ -53,11 +54,12 @@ def main():
     os.getcwd()
 
     data_path = args.data_path
+    case_name = args.case_name
     model_id = args.model_id
     output_model = args.output_model
 
-    train_dataset, validation_dataset, test_dataset = prepare_resupply_data_llama31(
-        data_path
+    train_dataset, test_dataset = prepare_resupply_data_llama31(
+        data_path,case_name
     )
     print(train_dataset)
 
@@ -96,11 +98,11 @@ def main():
             model=model,
             train_dataset=train_dataset,
             peft_config=peft_config,
-            dataset_text_field="text",
+            #dataset_text_field="text",
             args=training_arguments,
-            # tokenizer=tokenizer,
-            packing=False,
-            max_seq_length=4096
+            processing_class=tokenizer,
+            # packing=False,
+            # max_seq_length=4096
             
         )
 
