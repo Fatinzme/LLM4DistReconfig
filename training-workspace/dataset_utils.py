@@ -305,7 +305,7 @@ def parse_circuit_name(input_text):
 
     功能说明:
         1. 首先尝试匹配显式的电路名称定义（New Circuit.xxx）
-        2. 如果没有找到，则使用第一个线路名称作为电路标识
+        2. 如果没有找到，则使用第一个线路名称作为电路标识，注意这个默认可能导致多个样本名称相同
         3. 确保返回的名称是大写格式
         4. 如果都不能识别，返回"UNKNOWN"
     """
@@ -339,50 +339,47 @@ def prepare_resupply_data_llama31(data_dir_path, case_name):
 
     # 2. 收集所有要处理的案例
     if case_name:
-        case_dirs = [os.path.join(data_dir_path, case_name)]
+        case_dir = os.path.join(data_dir_path, case_name)
     else:
         raise ValueError("parameter case_name must be provided.")
 
     # 3. 初始化DataFrame
     train_data = {"name": [], "input": [], "optm_output": [], "text": []}
 
-    # 4. 处理每个案例文件夹
-    for case_dir in case_dirs:
-        case_path = os.path.join(data_dir_path, case_dir)
+    # 4. 处理每个案例文件
+    # 查找所有的dis_fa*.txt文件
+    dis_files = [
+        f
+        for f in os.listdir(case_dir)
+        if f.startswith("dis_fa") and f.endswith(".txt")
+    ]
 
-        # 查找所有的dis_fa*.txt文件
-        dis_files = [
-            f
-            for f in os.listdir(case_path)
-            if f.startswith("dis_fa") and f.endswith(".txt")
-        ]
+    for dis_file in dis_files:
+        # 构造对应的sol_fa*.txt文件名
+        sol_file = dis_file.replace("dis_", "sol_")
+        sol_path = os.path.join(case_dir, sol_file)
 
-        for dis_file in dis_files:
-            # 构造对应的sol_fa*.txt文件名
-            sol_file = dis_file.replace("dis_", "sol_")
-            sol_path = os.path.join(case_path, sol_file)
+        # 如果对应的解文件存在
+        if os.path.exists(sol_path):
+            # 读取输入(dis_fa文件)内容
+            with open(os.path.join(case_dir, dis_file), "r") as f:
+                dis_content = f.read()
 
-            # 如果对应的解文件存在
-            if os.path.exists(sol_path):
-                # 读取输入(dis_fa文件)内容
-                with open(os.path.join(case_path, dis_file), "r") as f:
-                    dis_content = f.read()
+            # 读取输出(sol_fa文件)内容
+            with open(sol_path, "r") as f:
+                sol_content = f.read()
 
-                # 读取输出(sol_fa文件)内容
-                with open(sol_path, "r") as f:
-                    sol_content = f.read()
+            # 解析电路名称
+            circuit_name = parse_circuit_name(dis_content)
 
-                # 解析电路名称
-                circuit_name = parse_circuit_name(dis_content)
+            # 构造样本文本
+            sample_text = f"<|user|>\n<task>\n{task_description}\n</task>\n<grid>\n{dis_content}\n</grid>\n</s>\n<|assistant|>\n{sol_content}\n</s>"
 
-                # 构造样本文本
-                sample_text = f"<|user|>\n<task>\n{task_description}\n</task>\n<grid>\n{dis_content}\n</grid>\n</s>\n<|assistant|>\n{sol_content}\n</s>"
-
-                # 添加到数据字典中
-                train_data["name"].append(circuit_name)
-                train_data["input"].append(dis_content)
-                train_data["optm_output"].append(sol_content)
-                train_data["text"].append(sample_text)
+            # 添加到数据字典中
+            train_data["name"].append(circuit_name)
+            train_data["input"].append(dis_content)
+            train_data["optm_output"].append(sol_content)
+            train_data["text"].append(sample_text)
 
     # 5. 创建DataFrame并设置index
     train_df = pd.DataFrame(train_data)
