@@ -24,7 +24,7 @@ def test_pipeline():
     print(f"数据加载完成，共 {len(train_df)} 个样本")
     
     # 3. 输出初始数据
-    output_file1 = output_dir / "train_df1.xlsx"
+    output_file1 = output_dir / "train_df1.json"
     train_df.head(args.n_rows).to_json(output_file1)
     print(f"\n初始数据前{args.n_rows}行已保存到: {output_file1}")
     # 4. 调用输入输出解析函数
@@ -32,7 +32,7 @@ def test_pipeline():
     train_df_action, train_df_with_action = parse_input_output(train_df)
     print("开关动作解析完成")
     # 5. 输出解析后的数据
-    output_file2 = output_dir / "train_df2.xlsx"
+    output_file2 = output_dir / "train_df2.json"
     train_df_with_action.head(args.n_rows).to_json(output_file2)
     print(f"\n带动作次数的数据前{args.n_rows}行已保存到: {output_file2}")
     # 6. 输出开关动作信息
