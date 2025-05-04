@@ -1,3 +1,4 @@
+New circuit.fa63
 New Bus.Z1 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
 New Bus.Z2 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
 New Bus.Z3 kV=11.40 Vmaxpu=1.100000 Vminpu=0.900000
@@ -269,5 +270,6 @@ New VSource.F9 bus1=Z73 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.00000
 New VSource.F10 bus1=Z82 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
 New VSource.F11 bus1=Z87 basekV=11.40 outputPU=1.050000 angle=0.000000 R1=0.000000 X1=0.000100 status=1 capacity=10000.00
 
-New fault.fa63 location=Line.Z70Z71 status=1
+New fault.fa631 location=Line.Z71Z72 status=1
+New fault.fa632 location=Line.Z1Z2 status=1
 

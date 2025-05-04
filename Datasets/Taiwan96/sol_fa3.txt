@@ -3,6 +3,7 @@
   "action": [
     "Line.Z1Z2.status=0",
     "Line.Z4Z5.status=0",
+    "Line.Z7Z8.status=0",
     "Line.Z8Z68.status=1"
   ],
   "supply_Vsource": {
@@ -10,9 +11,9 @@
     "Z2": "offline",
     "Z3": "offline",
     "Z4": "offline",
-    "Z5": "F8",
-    "Z6": "F8",
-    "Z7": "F8",
+    "Z5": "offline",
+    "Z6": "offline",
+    "Z7": "offline",
     "Z8": "F8",
     "Z9": "F8",
     "Z10": "F8",
