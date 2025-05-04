@@ -5,7 +5,6 @@ import ast
 import networkx as nx
 
 
-
 def get_model_and_tokenizer(model_id):
 
     tokenizer = AutoTokenizer.from_pretrained(model_id, local_files_only=True)
@@ -23,7 +22,7 @@ def get_model_and_tokenizer(model_id):
     model.config.use_cache=False
     model.config.pretraining_tp=1
     return model, tokenizer
-    
+
 def get_model(model_id):
     
     bnb_config = BitsAndBytesConfig(
@@ -41,14 +40,14 @@ def get_model(model_id):
     model.config.use_cache=False
     model.config.pretraining_tp=1
     return model
-    
+
 def get_tokenizer(model_id):
 
     tokenizer = AutoTokenizer.from_pretrained(model_id, local_files_only=True)
     tokenizer.pad_token = tokenizer.eos_token
     
     return tokenizer
-    
+
 def parse_open_lines(output_string):
     """
     Parses the open lines from the output string.
@@ -83,8 +82,8 @@ def parse_open_lines(output_string):
         return open_lines
     else:
         return []
-        
-        
+
+
 def parse_available_lines(output_string):
         # Regular expression to find the "Lines" part in the prompt which represents the available lines
         open_lines_pattern = r'Lines=\[(.*?)\]'
@@ -99,15 +98,14 @@ def parse_available_lines(output_string):
             return available_lines
         else:
             return []
-            
-            
+
+
 def get_output_graph_edges(predicted_lines, available_lines):
     predicted_lines_reverse = reverseTuple(predicted_lines)
     predicted_lines.extend(predicted_lines_reverse)
     return [line for line in available_lines if line not in predicted_lines]            
-            
-            
-            
+
+
 def compute_invalid_edges_loss(predicted_lines, available_lines):
         # Calculate the loss for invalid edges
         invalid_edges_loss = torch.tensor(0.0)
@@ -115,7 +113,7 @@ def compute_invalid_edges_loss(predicted_lines, available_lines):
             if line not in available_lines:
                 invalid_edges_loss += 1.0  # Adjust the penalty as needed
         return invalid_edges_loss
-        
+
 def compute_cycles_loss(predicted_lines):
     # Calculate the loss for cycles
     G = nx.Graph()
@@ -127,8 +125,8 @@ def compute_cycles_loss(predicted_lines):
     except nx.NetworkXNoCycle:
         pass
     return cycles_loss
-    
-    
+
+
 def compute_subgraphs_loss(predicted_lines):
     # Calculate the loss for subgraphs
     G = nx.Graph()
@@ -138,46 +136,6 @@ def compute_subgraphs_loss(predicted_lines):
     if nx.number_connected_components(G) > 1:
         subgraphs_loss += nx.number_connected_components(G) - 1  # Adjust the penalty as needed
     return subgraphs_loss    
-    
+
 def reverseTuple(lstOfTuple):
     return [tup[::-1] for tup in lstOfTuple]
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
