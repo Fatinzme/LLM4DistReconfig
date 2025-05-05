@@ -23,7 +23,7 @@ from monitoring_utils import *
 
 class CustomTrainerllama31(SFTTrainer):
 
-    def __init__(self, train_df=None, cycles_loss_scaling_factor=None, * args, **kwargs):
+    def __init__(self, train_df=None, cycles_loss_scaling_factor=None,custom_loss_config=None, * args, **kwargs):
         """
         自定义训练器，支持配电网重构任务的特定损失计算
 
@@ -42,7 +42,11 @@ class CustomTrainerllama31(SFTTrainer):
         else:
             self.loss_scaling_factor = [cycles_loss_scaling_factor, 0.01, 1.0]
 
-
+        # 设置默认自定义损失函数计算方式
+        if custom_loss_config is None:
+            self.custom_loss_config = "IEL CYL SUL"
+        else:
+            self.custom_loss_config = custom_loss_config
 
     def compute_loss(self, model, inputs, return_outputs=False):
         # 获取模型基础输出和损失
@@ -58,9 +62,9 @@ class CustomTrainerllama31(SFTTrainer):
         )[0]
 
         # 初始化自定义损失项
-        cycles_loss = torch.tensor(0.0).to(loss.device)
-        unsupply_loss = torch.tensor(0.0).to(loss.device)
-        invalid_loss = torch.tensor(0.0).to(loss.device)
+        cycles_loss = torch.tensor(0.0)
+        unsupply_loss = torch.tensor(0.0)
+        invalid_loss = torch.tensor(0.0)
 
         # 检查输出是否成功
         success_match = re.search(
@@ -73,19 +77,12 @@ class CustomTrainerllama31(SFTTrainer):
                 lines, vsources, switches = parse_input_grid(input_text)
                 load_list = parse_load(input_text)
 
-                cycles_loss = torch.tensor(10.0).to(loss.device)
-                invalid_loss = torch.tensor(len(switches)).to(loss.device)
+                cycles_loss = torch.tensor(10.0)
+                invalid_loss = torch.tensor(len(switches))
 
                 # 计算总负荷作为unsupply_loss
-                total_load = 0.0
-                for load_name, _ in load_list:
-                    load_match = re.search(
-                        rf"(?i)new\s+load\.{load_name.split('.')[-1]}.*?P=([\d.]+)",
-                        input_text,
-                    )
-                    if load_match:
-                        total_load += float(load_match.group(1))
-                unsupply_loss = torch.tensor(total_load).to(loss.device)
+                total_load =  parse_total_load(input_text)
+                unsupply_loss = torch.tensor(total_load)
             else:
                 # 正常解析output中的action
                 actions, len_action = parse_action_switch(output_text)
@@ -139,26 +136,35 @@ class CustomTrainerllama31(SFTTrainer):
                             topo_edges.remove((bus1, bus2))
 
                 # 计算各项损失
-                cycles_loss = compute_dis_cycles_loss(topo_edges)
-                unsupply_loss = compute_dis_unsupply_loss(
-                    input_text, topo_edges, vsources
-                )
-                invalid_loss = compute_dis_invalid_loss(input_text, actions)
-
-                self.loss_scaling_factor[2]=1/parse_total_load(input_text)
+                if "CYL" in self.custom_loss_config:
+                    cycles_loss = compute_dis_cycles_loss(topo_edges)
+                else:
+                    cycles_loss = torch.tensor(0.0)
+                if "SUL" in self.custom_loss_config:
+                    unsupply_loss = compute_dis_unsupply_loss(
+                        input_text, topo_edges, vsources
+                    )
+                    self.loss_scaling_factor[2] = 1 / parse_total_load(input_text)
+                else:
+                    self.loss_scaling_factor[2] = 0
+                    unsupply_loss = torch.tensor(0.0)
+                if "IEL" in self.custom_loss_config:
+                    invalid_loss = compute_dis_invalid_loss(input_text, actions)
+                else:
+                    invalid_loss = torch.tensor(0.0)
 
         except Exception as e:
             print(f"Error in custom loss calculation: {str(e)}")
             # 如果解析出错，使用最大惩罚值
             lines, vsources, switches = parse_input_grid(input_text)
-            cycles_loss = torch.tensor(10.0).to(loss.device)
-            invalid_loss = torch.tensor(len(switches)).to(loss.device)
+            cycles_loss = torch.tensor(10.0)
+            invalid_loss = torch.tensor(len(switches))
             self.loss_scaling_factor[1]=1
             self.loss_scaling_factor[2]=1
 
             # 计算总负荷
             total_load = parse_total_load(input_text)
-            unsupply_loss = torch.tensor(total_load).to(loss.device)
+            unsupply_loss = torch.tensor(total_load)
 
         # 使用loss_scaling_factor进行加权组合损失
         total_loss = loss + (
@@ -275,6 +281,7 @@ def main():
         trainer = CustomTrainerllama31(
             train_df=train_df,
             cycles_loss_scaling_factor=args.cycles_loss_scaling_factor,
+            custom_loss_config = args.custom_loss_config,
             model=model,
             train_dataset=train_dataset,
             peft_config=peft_config,
