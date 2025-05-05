@@ -3,6 +3,13 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import re
 import ast
 import networkx as nx
+from typing import List, Tuple
+from dataset_utils import (
+    parse_action_switch,
+    parse_circuit_name,
+    parse_input_grid,
+    parse_load
+)
 
 
 def get_model_and_tokenizer(model_id):
@@ -139,3 +146,101 @@ def compute_subgraphs_loss(predicted_lines):
 
 def reverseTuple(lstOfTuple):
     return [tup[::-1] for tup in lstOfTuple]
+
+
+def compute_dis_cycles_loss(topo_edges: List[Tuple[str, str]]) -> torch.Tensor:
+    """
+    计算配电网中的环网数量作为cycles loss
+
+    Args:
+        topo_edges: 网络拓扑边列表[(bus1, bus2),...]
+
+    Returns:
+        torch.Tensor: 环网数量的损失值
+    """
+    G = nx.Graph()
+    G.add_edges_from(topo_edges)
+
+    try:
+        cycles = list(nx.cycle_basis(G))
+        return torch.tensor(float(len(cycles)), dtype=torch.float32)
+    except nx.NetworkXNoCycle:
+        return torch.tensor(0.0, dtype=torch.float32)
+
+def parse_total_load(input_text):
+    load_list = parse_load(input_text)
+    total_load = 0.0
+    for load_name, _ in load_list:
+        load_match = re.search(
+            rf"(?i)new\s+load\.{load_name.split('.')[-1]}.*?P=([\d.]+)",
+            input_text,
+        )
+        if load_match:
+            total_load += float(load_match.group(1))
+    return total_load
+    
+    
+def compute_dis_unsupply_loss(
+    input_text: str, topo_edges: List[Tuple[str, str]], vsources: List[Tuple[str, str]]
+) -> torch.Tensor:
+    """
+    计算停电负荷总量作为unsupply loss
+
+    Args:
+        input_text: 输入文本
+        topo_edges: 网络拓扑边列表
+        vsources: 电源列表[(vsource_name, bus_name),...]
+
+    Returns:
+        torch.Tensor: 停电负荷总量的损失值
+    """
+    # 使用现有的parse_load函数解析负荷
+    load_list = parse_load(input_text)
+
+    G = nx.Graph()
+    G.add_edges_from(topo_edges)
+
+    # 提取所有连接电源的母线
+    source_buses = {bus.upper() for _, bus in vsources}
+
+    # 找出所有没有电源的连通分量
+    unsupplied_load = 0.0
+    for component in nx.connected_components(G):
+        component_has_power = any(bus in source_buses for bus in component)
+        if not component_has_power:
+            # 找出这个分量中的所有负荷
+            for load_name, load_bus in load_list:
+                if load_bus.upper() in component:
+                    # 从输入文本中提取该负荷的P值
+                    load_match = re.search(
+                        rf"(?i)new\s+load\.{load_name.split('.')[-1]}.*?P=([\d.]+)",
+                        input_text,
+                    )
+                    if load_match:
+                        unsupplied_load += float(load_match.group(1))
+
+    return torch.tensor(unsupplied_load, dtype=torch.float32)
+
+
+def compute_dis_invalid_loss(
+    input_text: str, actions: List[Tuple[str, int]]
+) -> torch.Tensor:
+    """
+    计算无效开关动作数量作为invalid loss
+
+    Args:
+        input_text: 输入文本
+        actions: 开关动作列表[(switch_name, new_status),...]
+
+    Returns:
+        torch.Tensor: 无效动作数量的损失值
+    """
+    # 使用现有的parse_input_grid函数解析开关信息
+    _, _, switches = parse_input_grid(input_text)
+
+    invalid_count = 0
+    for switch_name, _ in actions:
+        if switch_name not in switches:
+            invalid_count += 1
+
+    return torch.tensor(float(invalid_count), dtype=torch.float32)

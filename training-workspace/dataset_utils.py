@@ -391,37 +391,6 @@ def prepare_resupply_data_llama31(data_dir_path, case_name):
     return train_dataset, train_df
 
 
-def parse_action_switch(output_text: str) -> Tuple[list, int]:
-    """
-    解析模型输出中的开关动作
-
-    参数:
-        output_text (str): 模型输出的文本内容，包含开关动作信息
-
-    返回:
-        tuple: (开关动作列表, 动作次数)
-            - 开关动作列表: 每个元素为(开关名称, 新状态)的元组
-            - 动作次数: 总共有多少个开关动作
-
-    功能说明:
-        1. 从输出文本中解析所有开关状态变化
-        2. 使用正则表达式匹配形如"Line.XXX.status=Y"的格式
-        3. 返回解析结果和动作总次数
-        4. 开关名称不区分大小写
-    """
-    # 使用正则表达式找到所有开关动作
-    action_matches = re.finditer(r"(?i)line\.([a-z0-9_]+)\.status=([01])", output_text)
-
-    switch_actions = []
-    for match in action_matches:
-        switch_name = match.group(1)
-        new_status = int(match.group(2))
-        switch_actions.append((switch_name.upper(), new_status))  # 统一转换为大写
-
-    # 动作次数就是开关动作列表的长度
-    return switch_actions, len(switch_actions)
-
-
 def parse_input_output(train_df: pd.DataFrame) -> Tuple[Dict[str, list], pd.DataFrame]:
     """
     解析模型输入输出，提取开关动作及其次数
