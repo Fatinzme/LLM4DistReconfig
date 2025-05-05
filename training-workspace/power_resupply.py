@@ -311,7 +311,7 @@ def main():
     # model_with_peft.push_to_hub(args.model_name_hf, access_token)
     # tokenizer.push_to_hub(args.tokenizer_name_hf, access_token)
 
-    generate_response(user_input=test_dataset['prompt'][0], model=model_with_peft, tokenizer =tokenizer)
+    generate_response(user_input=train_dataset['input'][0], model=model_with_peft, tokenizer =tokenizer)
 
 if __name__ == "__main__":
     main()
