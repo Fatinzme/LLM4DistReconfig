@@ -9,7 +9,7 @@ import torch
 from datasets import load_dataset, Dataset
 from peft import LoraConfig, AutoPeftModelForCausalLM, PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments, GenerationConfig
-from trl import SFTTrainer
+from trl import SFTConfig,SFTTrainer
 import subprocess as sp
 from time import perf_counter
 import nvidia_smi
@@ -20,6 +20,11 @@ from model_utils import *
 from generation_utils import *
 from monitoring_utils import *
 
+'''
+当前代码只能在一个显卡上运行，不能自动在两张卡上运行
+https://huggingface.co/docs/trl/v0.17.0/sft_trainer#multi-gpu-training 里面说要加python -m torch.distributed.launch，但实际上并launch不起来
+单个显卡显存不够用的
+'''
 
 class CustomTrainerllama31(SFTTrainer):
 
@@ -37,7 +42,7 @@ class CustomTrainerllama31(SFTTrainer):
         self.train_df = train_df  # 存储训练样本的DataFrame
 
         # 设置默认损失权重 [cycles_loss, unsupply_loss, invalid_loss]
-        if loss_scaling_factor is None:
+        if cycles_loss_scaling_factor is None:
             self.loss_scaling_factor = [1.0, 0.01, 1.0]  # 默认权重
         else:
             self.loss_scaling_factor = [cycles_loss_scaling_factor, 0.01, 1.0]
@@ -75,7 +80,7 @@ class CustomTrainerllama31(SFTTrainer):
             # 如果output解析失败或success=false，使用惩罚值
             if not success_match or success_match.group(1).lower() == "false":
                 lines, vsources, switches = parse_input_grid(input_text)
-                load_list = parse_load(input_text)
+                #load_list = parse_load(input_text)
 
                 cycles_loss = torch.tensor(10.0)
                 invalid_loss = torch.tensor(len(switches))
@@ -83,6 +88,9 @@ class CustomTrainerllama31(SFTTrainer):
                 # 计算总负荷作为unsupply_loss
                 total_load =  parse_total_load(input_text)
                 unsupply_loss = torch.tensor(total_load)
+
+                self.loss_scaling_factor[1]=1
+                self.loss_scaling_factor[2]=1
             else:
                 # 正常解析output中的action
                 actions, len_action = parse_action_switch(output_text)
@@ -98,7 +106,7 @@ class CustomTrainerllama31(SFTTrainer):
                 # 先记录所有开关的初始状态
                 for switch in switches:
                     switch_match = re.search(
-                        rf"(?i)new\s+{switch}.*?bus1=([\w]+).*?bus2=([\w]+).*?status=([01])",
+                        rf"(?i){switch}.*?bus1=([\w]+).*?bus2=([\w]+).*?status=([01])",
                         input_text,
                     )
                     if switch_match:
@@ -115,7 +123,7 @@ class CustomTrainerllama31(SFTTrainer):
                 for line in lines:
                     if line not in switches:
                         line_match = re.search(
-                            rf"(?i)new\s+{line}.*?bus1=([\w]+).*?bus2=([\w]+)",
+                            rf"(?i){line}.*?bus1=([\w]+).*?bus2=([\w]+)",
                             input_text,
                         )
                         if line_match:
@@ -174,7 +182,7 @@ class CustomTrainerllama31(SFTTrainer):
         )
 
         # 可选: 打印各项损失值用于调试
-        if self.state.global_step % 100 == 0:  # 每100步打印一次
+        if self.state.global_step % 5 == 0:  # 每5步打印一次
             print(f"\nStep {self.state.global_step} - Loss breakdown:")
             print(f"  Base loss: {loss.item():.4f}")
             print(
@@ -243,13 +251,16 @@ def main():
     get_memory_allocated_cached()
 
     peft_config = LoraConfig(
-            r=8, lora_alpha=16, lora_dropout=0.05, bias="none", task_type="CAUSAL_LM"
+            inference_mode=False,r=8, lora_alpha=16, lora_dropout=0.05, bias="none", task_type="CAUSAL_LM"
         )
+    
 
-    # 可能要把默认
-    training_arguments = TrainingArguments(
+
+    # 配置参数，
+    training_arguments = SFTConfig(
             output_dir=output_model,
-            per_device_train_batch_size=args.batch_size,
+            #per_device_train_batch_size=args.batch_size,
+            per_device_train_batch_size=2,#batch_size=4的话要爆显存的
             gradient_accumulation_steps=4,
             optim="paged_adamw_32bit",
             learning_rate=2e-4,
@@ -260,6 +271,10 @@ def main():
             fp16=True,
             report_to="none",
             gradient_checkpointing=True,
+            dataset_text_field="text",
+            packing=False,
+            max_seq_length=8192,#为了适应样本必须这么长
+            gradient_checkpointing_kwargs={'use_reentrant':False}
 ##############################################
 
         )
@@ -269,12 +284,8 @@ def main():
             model=model,
             train_dataset=train_dataset,
             peft_config=peft_config,
-            #dataset_text_field="text",
             args=training_arguments,
             processing_class=tokenizer,
-            # packing=False,
-            # max_seq_length=4096
-            
         )
 
     elif args.custom_loss==1:
@@ -287,10 +298,6 @@ def main():
             peft_config=peft_config,
             args=training_arguments,
             processing_class=tokenizer,
-            # packing=False,
-            # max_seq_length=4096,
-            # dataset_text_field="text",
-            # 存在问题，需要查看源码
         )
 
     get_memory_allocated_cached()
@@ -314,10 +321,7 @@ def main():
 
     # model_with_peft.module.save_pretrained("./lora_finetuned_model") if torch.cuda.device_count() > 1 else model_with_peft.save_pretrained("./lora_finetuned_model")
     # tokenizer.save_pretrained("./lora_finetuned_model")
-
-    # model_with_peft.push_to_hub(args.model_name_hf, access_token)
-    # tokenizer.push_to_hub(args.tokenizer_name_hf, access_token)
-
+    
     generate_response(user_input=train_dataset['input'][0], model=model_with_peft, tokenizer =tokenizer)
 
 if __name__ == "__main__":

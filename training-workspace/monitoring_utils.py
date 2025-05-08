@@ -28,8 +28,8 @@ def get_nvidia_smi_info(index):
     handle = nvidia_smi.nvmlDeviceGetHandleByIndex(index)
     info = nvidia_smi.nvmlDeviceGetMemoryInfo(handle)
 
-    print("Total memory:", info.total / 1e9, "GB")
-    print("Free memory:", info.free / 1e9, "GB")
-    print("Used memory:", info.used / 1e9, "GB")
+    print("Total memory:", info.total / 1024**3, "GiB")
+    print("Free memory:", info.free / 1024**3, "GiB")
+    print("Used memory:", info.used / 1024**3, "GiB")
 
     nvidia_smi.nvmlShutdown()

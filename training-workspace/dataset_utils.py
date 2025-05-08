@@ -230,7 +230,7 @@ def parse_input_grid(input_text):
     switches = []
 
     # 解析所有线路（包括开关线路）
-    line_matches = re.finditer(r"(?i)new\s+line\.([\w]+)\s+.*?type=([\w]+)", input_text)
+    line_matches = re.finditer(r"(?i)line\.([\w]+)\s+.*?type=([\w]+)", input_text)
 
     for match in line_matches:
         line_name = f"Line.{match.group(1).upper()}"  # 统一线路名称格式
@@ -241,7 +241,7 @@ def parse_input_grid(input_text):
 
     # 解析所有电源（VSource）
     vsource_matches = re.finditer(
-        r"(?i)new\s+vsource\.([\w]+)\s+bus1=([\w]+)", input_text
+        r"(?i)vsource\.([\w]+)\s+bus1=([\w]+)", input_text
     )
 
     for match in vsource_matches:
@@ -270,7 +270,7 @@ def parse_load(input_text):
 
     正则表达式说明:
         (?i) - 不区分大小写匹配
-        \bnew\s+load\. - 匹配"New Load."或"new load."等变体
+        load\. - 匹配"Load."或"load."等变体
         ([\w]+) - 捕获负荷名称(字母数字下划线)
         .*?bus1= - 跳过中间字符直到bus1=
         ([\w]+) - 捕获连接的母线编号
@@ -279,7 +279,7 @@ def parse_load(input_text):
     load_list = []
 
     # 使用正则表达式查找所有Load定义
-    load_pattern = r"(?i)\bnew\s+load\.([\w]+).*?bus1=([\w]+)"
+    load_pattern = r"(?i)load\.([\w]+).*?bus1=([\w]+)"
 
     # 查找所有匹配项
     matches = re.finditer(load_pattern, input_text)
@@ -304,19 +304,19 @@ def parse_circuit_name(input_text):
         str: 电路名称（大写格式）
 
     功能说明:
-        1. 首先尝试匹配显式的电路名称定义（New Circuit.xxx）
+        1. 首先尝试匹配显式的电路名称定义（Circuit.xxx）
         2. 如果没有找到，则使用第一个线路名称作为电路标识，注意这个默认可能导致多个样本名称相同
         3. 确保返回的名称是大写格式
         4. 如果都不能识别，返回"UNKNOWN"
     """
     # 1. 尝试查找显示的电路名称定义
-    match = re.search(r"(?i)\bnew\s+circuit\.([\w]+)", input_text)
+    match = re.search(r"(?i)circuit\.([\w]+)", input_text)
 
     if match:
         return match.group(1).upper()
 
     # 2. 如果没有显式定义，则使用第一个线路的名称
-    line_match = re.search(r"(?i)\bnew\s+line\.([\w]+)", input_text)
+    line_match = re.search(r"(?i)line\.([\w]+)", input_text)
 
     return line_match.group(1).upper() if line_match else "UNKNOWN"
 
@@ -373,11 +373,12 @@ def prepare_resupply_data_llama31(data_dir_path, case_name):
             circuit_name = parse_circuit_name(dis_content)
 
             # 构造样本文本
-            sample_text = f"<|user|>\n<task>\n{task_description}\n</task>\n<grid>\n{dis_content}\n</grid>\n</s>\n<|assistant|>\n{sol_content}\n</s>"
+            input_text = f"<task>\n{task_description}\n</task>\n<grid>\n{dis_content}\n</grid>"
+            sample_text = f"<|user|>\n{input_text}\n</s>\n<|assistant|>\n{sol_content}\n</s>"
 
             # 添加到数据字典中
             train_data["name"].append(circuit_name)
-            train_data["input"].append(dis_content)
+            train_data["input"].append(input_text)
             train_data["optm_output"].append(sol_content)
             train_data["text"].append(sample_text)
 

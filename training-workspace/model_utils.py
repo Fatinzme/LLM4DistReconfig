@@ -22,7 +22,6 @@ def get_model_and_tokenizer(model_id):
     model = AutoModelForCausalLM.from_pretrained(
         model_id, 
         local_files_only=True,
-        # device_map=dev_map,
         quantization_config=bnb_config, 
         device_map="auto"
     )
@@ -172,7 +171,7 @@ def parse_total_load(input_text):
     total_load = 0.0
     for load_name, _ in load_list:
         load_match = re.search(
-            rf"(?i)new\s+load\.{load_name.split('.')[-1]}.*?P=([\d.]+)",
+            rf"(?i)load\.{load_name.split('.')[-1]}.*?P=([\d.]+)",
             input_text,
         )
         if load_match:
@@ -213,7 +212,7 @@ def compute_dis_unsupply_loss(
                 if load_bus.upper() in component:
                     # 从输入文本中提取该负荷的P值
                     load_match = re.search(
-                        rf"(?i)new\s+load\.{load_name.split('.')[-1]}.*?P=([\d.]+)",
+                        rf"(?i)load\.{load_name.split('.')[-1]}.*?P=([\d.]+)",
                         input_text,
                     )
                     if load_match:
@@ -230,7 +229,7 @@ def compute_dis_invalid_loss(
 
     Args:
         input_text: 输入文本
-        actions: 开关动作列表[(switch_name, new_status),...]
+        actions: 开关动作列表[(switch_name, status),...]
 
     Returns:
         torch.Tensor: 无效动作数量的损失值
