@@ -41,14 +41,14 @@ def main():
 
     print(model_with_peft)
 
-    p1,p2=generate_response(user_input=train_df['input'].iloc[0], model=model_with_peft, tokenizer =tokenizer, max_new_tokens=4096)
+    p1,p2=generate_response(user_input=train_df['input'].iloc[0], model=model_with_peft, tokenizer =tokenizer, max_new_tokens=8192)
     #在response_to文件夹下保存p1
     if args.response_to:
         os.makedirs(args.response_to, exist_ok=True)
         with open(os.path.join(args.response_to, 'response1.txt'), 'w') as f:
             f.write(p1)
 
-    p1,p2=generate_response(user_input=train_df['input'].iloc[1], model=model_with_peft, tokenizer =tokenizer, max_new_tokens=4096)
+    p1,p2=generate_response(user_input=train_df['input'].iloc[1], model=model_with_peft, tokenizer =tokenizer, max_new_tokens=8192)
     #在response_to文件夹下保存p1
     if args.response_to:
         os.makedirs(args.response_to, exist_ok=True)
