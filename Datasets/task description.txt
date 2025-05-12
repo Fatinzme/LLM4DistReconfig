@@ -1,23 +1,23 @@
 Prompt for Distribution System Power Restoration:
 Objective: Determine the optimal set of switches to open/close(Always keep faulted lines isolated by setting status=0), restoring maximum load demand while maintaining a radial topology without overloads or voltage violations.
 
-Input Processing Instructions:
-1.Process fault objects first:
-* Open all lines with status=1 around fault's location (isolation)
-* Add fault-altered lines to inputs
-2.Line types: Only modify type=S (switch) elements. type=L lines cannot be switched.
-3. Source constraints: For each enabled VSource (status=1), Total connected load (P,Q) must not exceed "Capacity". Use default 10,000kVA if unspecified.
-4. Voltage constraints: All energized buses must satisfy Vminpu ≤ V ≤ Vmaxpu. Default [0.8,1.1] p.u. applies where unspecified.
-5.Topology requirement: Post-restoration network must be a single radial tree connecting enabled VSources to loads.
-
-Output Requirements:List switches with changed status
+Output Requirements:List switches with changed status using following json format
+{
+ "success":true/false,
+ "action":[List switches with changed status],
+ "supply_Vsource":{
+	list buses followed by Vsource supplying each of them.
+	if a bus is not supplyed by any Vsource, set its value to "offline"
+ }
+}
 
 Key Analysis Steps to Perform:
 1.Fault Isolation: Enforce status=0 on lines tagged by active faults (fault.status=1)
 2.Feasibility Check: Verify if VSources can support restored loads
 3.Radial Validation: Determine all connected components and ensure in every components number of its bus minus number of it lines which status=1 equals 1.
-4.Violation Checking: Iterate until no overloaded sources or out-of-limit voltages exist
 
 Terminate if:
 No feasible radial configuration meets voltage constraints
 All candidate solutions overload sources
+
+Set "success" when find feasible configuration. If terminated, set "success" to false.
