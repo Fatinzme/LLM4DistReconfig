@@ -213,7 +213,12 @@ def parse_args():
     parser.add_argument('--custom_loss', type=int, required=True, help='For regular loss use 0. For custom loss with 3 penalty terms use 1.')
     parser.add_argument('--custom_loss_config', type=str, required=True, help='Custom loss configuration.')
     parser.add_argument('--cycles_loss_scaling_factor', type=float, required=True, help='Scaling factor for cycles loss')
-    parser.add_argument('--model_for_generation_path', type=str, required=True, help='Model path to use for generation.')
+    parser.add_argument(
+        "--model_for_next_generation_path",
+        type=str,
+        required=True,
+        help="Model path to use for next generation tune.",
+    )
     # parser.add_argument(
     #     "--huggingface_token",
     #     type=str,
@@ -238,48 +243,59 @@ def main():
     output_model = args.output_model
 
     train_dataset, train_df = prepare_resupply_data_llama31(
-        data_path,case_name
+        data_path, case_name
     )
     print(train_dataset)
 
+    # 加载基础模型和tokenizer
     model, tokenizer = get_model_and_tokenizer(model_id)
 
-    # device = "cuda" if torch.cuda.is_available() else "cpu"
-    # if torch.cuda.device_count()  > 1:
-    #     model = torch.nn.DataParallel(model)
+    #lora参数
+    peft_config = LoraConfig(
+        inference_mode=False,
+        r=8,
+        lora_alpha=16,
+        lora_dropout=0.05,
+        bias="none",
+        task_type="CAUSAL_LM",
+    )
+
+    # 检查是否需要加载已有的LoRA模型
+    if args.model_for_next_generation_path:
+        tune_model_path = args.model_for_next_generation_path
+        print(f"Loading Peft model from: {tune_model_path}")
+        peft_model = PeftModel.from_pretrained(
+            model,
+            tune_model_path,
+            peft_config,
+        )
+        model = peft_model.merge_and_unload()
+    else:
+        print("No pre-trained Peft model provided. Training from scratch.")
 
     get_memory_allocated_cached()
 
-    peft_config = LoraConfig(
-            inference_mode=False,r=8, lora_alpha=16, lora_dropout=0.05, bias="none", task_type="CAUSAL_LM"
-        )
-    
-
-
-    # 配置参数，
+    # 配置参数
     training_arguments = SFTConfig(
-            output_dir=output_model,
-            #per_device_train_batch_size=args.batch_size,
-            per_device_train_batch_size=2,#batch_size=4的话要爆显存的
-            gradient_accumulation_steps=4,
-            optim="paged_adamw_32bit",
-            learning_rate=2e-4,
-            lr_scheduler_type="cosine",
-            save_strategy="epoch",
-            logging_steps=10,
-            num_train_epochs=args.num_train_epochs,
-            fp16=True,
-            report_to="none",
-            gradient_checkpointing=True,
-            dataset_text_field="text",
-            packing=False,
-            max_seq_length=8192,#为了适应样本必须这么长
-            gradient_checkpointing_kwargs={'use_reentrant':False}
-##############################################
+        output_dir=output_model,
+        per_device_train_batch_size=2,
+        gradient_accumulation_steps=4,
+        optim="paged_adamw_32bit",
+        learning_rate=2e-4,
+        lr_scheduler_type="cosine",
+        save_strategy="epoch",
+        logging_steps=10,
+        num_train_epochs=args.num_train_epochs,
+        fp16=True,
+        report_to="none",
+        gradient_checkpointing=True,
+        dataset_text_field="text",
+        packing=False,
+        max_seq_length=8192,
+        gradient_checkpointing_kwargs={'use_reentrant': False}
+    )
 
-        )
-
-    if args.custom_loss==0:
+    if args.custom_loss == 0:
         trainer = SFTTrainer(
             model=model,
             train_dataset=train_dataset,
@@ -287,12 +303,11 @@ def main():
             args=training_arguments,
             processing_class=tokenizer,
         )
-
-    elif args.custom_loss==1:
+    elif args.custom_loss == 1:
         trainer = CustomTrainerllama31(
             train_df=train_df,
             cycles_loss_scaling_factor=args.cycles_loss_scaling_factor,
-            custom_loss_config = args.custom_loss_config,
+            custom_loss_config=args.custom_loss_config,
             model=model,
             train_dataset=train_dataset,
             peft_config=peft_config,
@@ -305,24 +320,18 @@ def main():
     get_cuda_info()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("Device: ", device) 
+    print("Device: ", device)
 
     get_gpu_memory()
 
     get_nvidia_smi_info(0)
 
+    # 开始训练
     trainer.train()
 
-    model_path = args.model_for_generation_path
-
-    model_with_peft = peft_merge_unload(model_id, model_path)
-
-    print(model_with_peft)
-
-    # model_with_peft.module.save_pretrained("./lora_finetuned_model") if torch.cuda.device_count() > 1 else model_with_peft.save_pretrained("./lora_finetuned_model")
-    # tokenizer.save_pretrained("./lora_finetuned_model")
-    
-    generate_response(user_input=train_dataset['input'][0], model=model_with_peft, tokenizer =tokenizer)
+    # 新增训练完成提示
+    print("\nTraining completed successfully!")
+    print(f"Model saved to: {output_model}")
 
 if __name__ == "__main__":
     main()
