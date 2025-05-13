@@ -23,7 +23,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    train_dataset, train_df = prepare_resupply_data_llama31(
+    train_dataset, train_df,test_dataset = prepare_resupply_data_llama31(
         args.data_path,args.case_name
     )
 

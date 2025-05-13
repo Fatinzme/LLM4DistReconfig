@@ -388,8 +388,13 @@ def prepare_resupply_data_llama31(data_dir_path, case_name):
 
     # 6. 转换为HuggingFace数据集
     train_dataset = Dataset.from_pandas(train_df[["text"]])
-
-    return train_dataset, train_df
+    # 进行数据集拆分
+    train_test_split_data = train_dataset.train_test_split(test_size=0.05, seed=1895)
+    train_dataset, test_dataset = (
+        train_test_split_data["train"],
+        train_test_split_data["test"],
+    )
+    return train_dataset, train_df, test_dataset
 
 
 def parse_input_output(train_df: pd.DataFrame) -> Tuple[Dict[str, list], pd.DataFrame]:

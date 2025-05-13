@@ -242,7 +242,7 @@ def main():
     model_id = args.model_id
     output_model = args.output_model
 
-    train_dataset, train_df = prepare_resupply_data_llama31(
+    train_dataset, train_df, test_dataset = prepare_resupply_data_llama31(
         data_path, case_name
     )
     print(train_dataset)
@@ -250,7 +250,7 @@ def main():
     # 加载基础模型和tokenizer
     model, tokenizer = get_model_and_tokenizer(model_id)
 
-    #lora参数
+    # lora参数
     peft_config = LoraConfig(
         inference_mode=False,
         r=8,
@@ -292,7 +292,8 @@ def main():
         dataset_text_field="text",
         packing=False,
         max_seq_length=8192,
-        gradient_checkpointing_kwargs={'use_reentrant': False}
+        evaluation_strategy="epoch",  # 添加评估策略，每个 epoch 进行评估
+        gradient_checkpointing_kwargs={"use_reentrant": False},
     )
 
     if args.custom_loss == 0:
@@ -302,6 +303,7 @@ def main():
             peft_config=peft_config,
             args=training_arguments,
             processing_class=tokenizer,
+            eval_dataset=test_dataset,
         )
     elif args.custom_loss == 1:
         trainer = CustomTrainerllama31(
@@ -313,6 +315,7 @@ def main():
             peft_config=peft_config,
             args=training_arguments,
             processing_class=tokenizer,
+            eval_dataset=test_dataset,
         )
 
     get_memory_allocated_cached()
@@ -329,8 +332,8 @@ def main():
     # 开始训练
     trainer.train()
 
-    # 新增训练完成提示
-    print("\nTraining completed successfully!")
+    # 训练完成提示
+    print("\nTuning completed successfully!")
     print(f"Model saved to: {output_model}")
 
 if __name__ == "__main__":
