@@ -216,7 +216,7 @@ def parse_args():
     parser.add_argument(
         "--model_for_next_generation_path",
         type=str,
-        required=True,
+        required=False,
         help="Model path to use for next generation tune.",
     )
     # parser.add_argument(
@@ -264,12 +264,13 @@ def main():
     if args.model_for_next_generation_path:
         tune_model_path = args.model_for_next_generation_path
         print(f"Loading Peft model from: {tune_model_path}")
-        peft_model = PeftModel.from_pretrained(
+        lora_model = PeftModel.from_pretrained(
             model,
             tune_model_path,
-            peft_config,
+            config=peft_config,
         )
-        model = peft_model.merge_and_unload()
+        lora_model.train(True)
+        model=lora_model
     else:
         print("No pre-trained Peft model provided. Training from scratch.")
 
@@ -278,7 +279,7 @@ def main():
     # 配置参数
     training_arguments = SFTConfig(
         output_dir=output_model,
-        per_device_train_batch_size=2,
+        per_device_train_batch_size=args.batch_size,
         gradient_accumulation_steps=4,
         optim="paged_adamw_32bit",
         learning_rate=2e-4,
