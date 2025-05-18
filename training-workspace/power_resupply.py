@@ -261,18 +261,19 @@ def main():
     )
 
     # 检查是否需要加载已有的LoRA模型
-    if args.model_for_next_generation_path:
-        tune_model_path = args.model_for_next_generation_path
-        print(f"Loading Peft model from: {tune_model_path}")
-        lora_model = PeftModel.from_pretrained(
-            model,
-            tune_model_path,
-            config=peft_config,
-        )
-        lora_model.train(True)
-        model=lora_model
-    else:
-        print("No pre-trained Peft model provided. Training from scratch.")
+    # if args.model_for_next_generation_path:
+    #     tune_model_path = args.model_for_next_generation_path
+    #     print(f"Loading Peft model from: {tune_model_path}")
+    #     lora_model = PeftModel.from_pretrained(
+    #         model,
+    #         tune_model_path,
+    #         config=peft_config,
+    #     )
+    #     lora_model.train(True)
+    #     model=lora_model
+    # else:
+    #     print("No pre-trained Peft model provided. Training from scratch.")
+    #这部分不去判断了，和之前初始化相同
 
     get_memory_allocated_cached()
 
@@ -293,8 +294,8 @@ def main():
         dataset_text_field="text",
         packing=False,
         max_seq_length=8192,
-        evaluation_strategy="epoch",  # 添加评估策略，每个 epoch 进行评估
         gradient_checkpointing_kwargs={"use_reentrant": False},
+        #eval_strategy="epoch",  # 添加评估策略，每个 epoch 进行评估
     )
 
     if args.custom_loss == 0:
@@ -304,7 +305,7 @@ def main():
             peft_config=peft_config,
             args=training_arguments,
             processing_class=tokenizer,
-            eval_dataset=test_dataset,
+            #eval_dataset=test_dataset, 
         )
     elif args.custom_loss == 1:
         trainer = CustomTrainerllama31(
@@ -316,7 +317,7 @@ def main():
             peft_config=peft_config,
             args=training_arguments,
             processing_class=tokenizer,
-            eval_dataset=test_dataset,
+            #eval_dataset=test_dataset,
         )
 
     get_memory_allocated_cached()
@@ -331,7 +332,18 @@ def main():
     get_nvidia_smi_info(0)
 
     # 开始训练
-    trainer.train()
+    #trainer.train(resume_from_checkpoint=True) 
+    #trainer.train(resume_from_checkpoint=args.model_for_next_generation_path) 
+    # 添加一个resume_from_checkpoint参数，True表示从最后的检查点恢复训练
+
+    if args.model_for_next_generation_path:
+        tune_model_path = args.model_for_next_generation_path
+        print(f"Loading Peft model from: {tune_model_path}")
+        # 添加一个resume_from_checkpoint参数，表示从指定的检查点恢复训练
+        trainer.train(resume_from_checkpoint=tune_model_path)
+    else:
+        trainer.train(resume_from_checkpoint=False)
+        print("No pre-trained Peft model provided. Training from scratch.")
 
     # 训练完成提示
     print("\nTuning completed successfully!")
