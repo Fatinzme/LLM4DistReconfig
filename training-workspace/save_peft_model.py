@@ -4,17 +4,15 @@
 import torch
 import argparse
 from model_utils import *
+from generation_utils import peft_merge_unload
 
 def save_peft_model(model_id, peft_path,save_path):
     model, tokenizer = get_model_and_tokenizer(model_id)
     model_with_peft = peft_merge_unload(model_id, peft_path)
     print(model_with_peft)
 
-    (
-        model_with_peft.module.save_pretrained(save_path)
-        if torch.cuda.device_count() > 1
-        else model_with_peft.save_pretrained(save_path)
-    )
+    model_with_peft.save_pretrained(save_path)
+
     tokenizer.save_pretrained(save_path)
 
 
