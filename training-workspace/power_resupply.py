@@ -40,47 +40,80 @@ class CustomTrainerllama31(SFTTrainer):
         """
         super().__init__(*args, **kwargs)
         self.train_df = train_df  # 存储训练样本的DataFrame
-
         # 设置默认损失权重 [cycles_loss, unsupply_loss, invalid_loss]
-        if cycles_loss_scaling_factor is None:
-            self.loss_scaling_factor = [1.0, 0.01, 1.0]  # 默认权重
-        else:
-            self.loss_scaling_factor = [cycles_loss_scaling_factor, 0.01, 1.0]
-
+        self.loss_scaling_factor = [1.0, 0.01, 1.0] if cycles_loss_scaling_factor is None else [cycles_loss_scaling_factor, 0.01, 1.0]
         # 设置默认自定义损失函数计算方式
-        if custom_loss_config is None:
-            self.custom_loss_config = "IEL CYL SUL"
-        else:
-            self.custom_loss_config = custom_loss_config
+        self.custom_loss_config = (
+            "IEL CYL UPL SWL" if custom_loss_config is None else custom_loss_config
+        )
+
+    def get_topo_edges(self, input_text, output_text):
+        """
+        根据输入输出文本生成拓扑边信息
+        """
+        # 解析输入网格
+        lines, vsources, switches = parse_input_grid(input_text)
+
+        # 构建初始拓扑边
+        topo_edges = []
+        switch_status = {}
+
+        # 记录所有开关的初始状态
+        for switch in switches:
+            switch_match = re.search(rf"(?i){switch}.*?bus1=([\w]+).*?bus2=([\w]+).*?status=([01])", input_text)
+            if switch_match:
+                bus1, bus2, status = switch_match.group(1).upper(), switch_match.group(2).upper(), int(switch_match.group(3))
+                switch_status[switch] = (bus1, bus2, status)
+                if status == 1:
+                    topo_edges.append((bus1, bus2))
+
+        # 添加非开关线路（默认闭合）
+        for line in lines:
+            if line not in switches:
+                line_match = re.search(rf"(?i){line}.*?bus1=([\w]+).*?bus2=([\w]+)", input_text)
+                if line_match:
+                    topo_edges.append((line_match.group(1).upper(), line_match.group(2).upper()))
+
+        # 应用动作改变拓扑
+        actions, _ = parse_action_switch(output_text)
+        for switch_name, new_status in actions:
+            if switch_name in switch_status:
+                bus1, bus2, _ = switch_status[switch_name]
+                if new_status == 1 and (bus1, bus2) not in topo_edges:
+                    topo_edges.append((bus1, bus2))
+                elif new_status == 0 and (bus1, bus2) in topo_edges:
+                    topo_edges.remove((bus1, bus2))
+
+        return topo_edges
+
+    def compute_dis_switch_loss(self, model_actions_len, optimal_actions_len):
+        """
+        计算开关动作次数的差距作为switch loss
+        """
+        return torch.tensor(abs(model_actions_len - optimal_actions_len), dtype=torch.float32)
 
     def compute_loss(self, model, inputs, return_outputs=False):
-        # 获取模型基础输出和损失
         outputs = model(**inputs)
         loss = outputs.loss
 
         # 解码输入输出文本
-        input_text = self.tokenizer.batch_decode(
-            inputs["input_ids"], skip_special_tokens=True
-        )[0]
-        output_text = self.tokenizer.batch_decode(
-            outputs.logits.argmax(dim=-1), skip_special_tokens=True
-        )[0]
+        input_text = self.tokenizer.batch_decode(inputs["input_ids"], skip_special_tokens=True)[0]
+        output_text = self.tokenizer.batch_decode(outputs.logits.argmax(dim=-1), skip_special_tokens=True)[0]
 
         # 初始化自定义损失项
         cycles_loss = torch.tensor(0.0)
         unsupply_loss = torch.tensor(0.0)
         invalid_loss = torch.tensor(0.0)
+        switch_loss = torch.tensor(0.0)
 
         # 检查输出是否成功
-        success_match = re.search(
-            r'"success"\s*:\s*(true|false)', output_text, re.IGNORECASE
-        )
+        success_match = re.search(r'"success"\s*:\s*(true|false)', output_text, re.IGNORECASE)
 
         try:
             # 如果output解析失败或success=false，使用惩罚值
             if not success_match or success_match.group(1).lower() == "false":
                 lines, vsources, switches = parse_input_grid(input_text)
-                #load_list = parse_load(input_text)
+                # load_list = parse_load(input_text)
 
                 cycles_loss = torch.tensor(10.0)
                 invalid_loss = torch.tensor(len(switches))
@@ -88,82 +121,32 @@ class CustomTrainerllama31(SFTTrainer):
                 # 计算总负荷作为unsupply_loss
                 total_load =  parse_total_load(input_text)
                 unsupply_loss = torch.tensor(total_load)
-
-                self.loss_scaling_factor[1]=1
-                self.loss_scaling_factor[2]=1
+                self.loss_scaling_factor[1] = 1
+                self.loss_scaling_factor[2] = 1
             else:
                 # 正常解析output中的action
                 actions, len_action = parse_action_switch(output_text)
-                self.loss_scaling_factor[2]=1/len_action
+                self.loss_scaling_factor[2] = 1 / len_action
 
-                # 解析输入网格
-                lines, vsources, switches = parse_input_grid(input_text)
-
-                # 构建初始拓扑边
-                topo_edges = []
-                switch_status = {}
-
-                # 先记录所有开关的初始状态
-                for switch in switches:
-                    switch_match = re.search(
-                        rf"(?i){switch}.*?bus1=([\w]+).*?bus2=([\w]+).*?status=([01])",
-                        input_text,
-                    )
-                    if switch_match:
-                        bus1, bus2, status = (
-                            switch_match.group(1).upper(),
-                            switch_match.group(2).upper(),
-                            int(switch_match.group(3)),
-                        )
-                        switch_status[switch] = (bus1, bus2, status)
-                        if status == 1:
-                            topo_edges.append((bus1, bus2))
-
-                # 添加非开关线路(默认闭合)
-                for line in lines:
-                    if line not in switches:
-                        line_match = re.search(
-                            rf"(?i){line}.*?bus1=([\w]+).*?bus2=([\w]+)",
-                            input_text,
-                        )
-                        if line_match:
-                            topo_edges.append(
-                                (
-                                    line_match.group(1).upper(),
-                                    line_match.group(2).upper(),
-                                )
-                            )
-
-                # 应用动作改变拓扑
-                for switch_name, new_status in actions:
-                    if switch_name in switch_status:
-                        bus1, bus2, _ = switch_status[switch_name]
-                        if new_status == 1 and (bus1, bus2) not in topo_edges:
-                            topo_edges.append((bus1, bus2))
-                        elif new_status == 0 and (bus1, bus2) in topo_edges:
-                            topo_edges.remove((bus1, bus2))
+                # 获取拓扑边信息
+                topo_edges = self.get_topo_edges(input_text, output_text)
 
                 # 计算各项损失
                 if "CYL" in self.custom_loss_config:
                     cycles_loss = compute_dis_cycles_loss(topo_edges)
-                else:
-                    cycles_loss = torch.tensor(0.0)
-                if "SUL" in self.custom_loss_config:
-                    unsupply_loss = compute_dis_unsupply_loss(
-                        input_text, topo_edges, vsources
-                    )
-                    self.loss_scaling_factor[2] = 1 / parse_total_load(input_text)
-                else:
-                    self.loss_scaling_factor[2] = 0
-                    unsupply_loss = torch.tensor(0.0)
+                if "UPL" in self.custom_loss_config:
+                    unsupply_loss = compute_dis_unsupply_loss(input_text, topo_edges, vsources)
+                    self.loss_scaling_factor[1] = 1 / parse_total_load(input_text)
                 if "IEL" in self.custom_loss_config:
                     invalid_loss = compute_dis_invalid_loss(input_text, actions)
-                else:
-                    invalid_loss = torch.tensor(0.0)
+                if "SWL" in self.custom_loss_config:
+                    cname = parse_circuit_name(input_text)
+                    optimal_output = self.train_df.loc[cname, "optm_output"]
+                    _, optimal_actions_len = parse_action_switch(optimal_output)
+                    switch_loss = self.compute_dis_switch_loss(len_action, optimal_actions_len)
 
         except Exception as e:
             print(f"Error in custom loss calculation: {str(e)}")
-            # 如果解析出错，使用最大惩罚值
             lines, vsources, switches = parse_input_grid(input_text)
             cycles_loss = torch.tensor(10.0)
             invalid_loss = torch.tensor(len(switches))
@@ -179,21 +162,17 @@ class CustomTrainerllama31(SFTTrainer):
             cycles_loss * self.loss_scaling_factor[0]
             + unsupply_loss * self.loss_scaling_factor[1]
             + invalid_loss * self.loss_scaling_factor[2]
+            + switch_loss * self.loss_scaling_factor[2]
         )
 
-        # 可选: 打印各项损失值用于调试
-        if self.state.global_step % 5 == 0:  # 每5步打印一次
+        # 打印调试信息
+        if self.state.global_step % 5 == 0:
             print(f"\nStep {self.state.global_step} - Loss breakdown:")
             print(f"  Base loss: {loss.item():.4f}")
-            print(
-                f"  Cycles loss: {cycles_loss.item():.4f} (weight: {self.loss_scaling_factor[0]})"
-            )
-            print(
-                f"  Unsupply loss: {unsupply_loss.item():.4f} (weight: {self.loss_scaling_factor[1]})"
-            )
-            print(
-                f"  Invalid loss: {invalid_loss.item():.4f} (weight: {self.loss_scaling_factor[2]})"
-            )
+            print(f"  Cycles loss: {cycles_loss.item():.4f} (weight: {self.loss_scaling_factor[0]})")
+            print(f"  Unsupply loss: {unsupply_loss.item():.4f} (weight: {self.loss_scaling_factor[1]})")
+            print(f"  Invalid loss: {invalid_loss.item():.4f} (weight: {self.loss_scaling_factor[2]})")
+            print(f"  Switch loss: {switch_loss.item():.4f}")  # 新增switch loss
             print(f"  Total loss: {total_loss.item():.4f}\n")
 
         return (total_loss, outputs) if return_outputs else total_loss
